@@ -16,9 +16,9 @@ pi.set_servo_pulsewidth(ESC, 0)
 
 max_value = 2000 #change this if your ESC's max value is different or leave it be
 min_value = 700  #change this if your ESC's min value is different or leave it be
-print "For first time launch, select calibrate"
-print "Type the exact word for the function you want"
-print "calibrate OR manual OR control OR arm OR stop"
+print ("For first time launch, select calibrate \n")
+print ("Type the exact word for the function you want \n")
+print ("calibrate OR manual OR control OR arm OR stop \n")
 
 def manual_drive(): #You will use this function to program your ESC if required
     print "You have selected manual option so give a value between 0 and you max value"    
