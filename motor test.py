@@ -9,7 +9,7 @@ os.system ("sudo pigpiod") #Launching GPIO library
 time.sleep(1) # As i said it is too impatient and so if this delay is removed you will get an error
 import pigpio #importing GPIO library
 
-ESC=4  #Connect the ESC in this GPIO pin 
+ESC=0  #Connect the ESC in this GPIO pin
 
 pi = pigpio.pi();
 pi.set_servo_pulsewidth(ESC, 0) 
@@ -57,7 +57,7 @@ def calibrate():   #This is the auto calibration procedure of a normal ESC
             pi.set_servo_pulsewidth(ESC, min_value)
             time.sleep(1)
             print "See.... uhhhhh"
-            control() # You can change this to any other function you want
+            manual_drive() # You can change this to any other function you want
             
 def control(): 
     print "I'm Starting the motor, I hope its calibrated and armed, if not restart by giving 'x'"
@@ -102,7 +102,7 @@ def arm(): #This is the arming procedure of an ESC
         time.sleep(1)
         pi.set_servo_pulsewidth(ESC, min_value)
         time.sleep(1)
-        control() 
+        manual_drive()
         
 def stop(): #This will stop every action your Pi is performing for ESC ofcourse.
     pi.set_servo_pulsewidth(ESC, 0)
