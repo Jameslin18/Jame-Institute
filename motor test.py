@@ -27,10 +27,10 @@ def manual_drive(): #You will use this function to program your ESC if required
         if inp == "stop":
             stop()
             break
-		elif inp == "control":
+        elif inp == "control":
 			control()
 			break
-		elif inp == "arm":
+        elif inp == "arm":
 			arm()
 			break	
         else:
@@ -44,7 +44,7 @@ def calibrate():   #This is the auto calibration procedure of a normal ESC
         pi.set_servo_pulsewidth(ESC, max_value)
         print("Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
         inp = raw_input()
-        if inp == '':            
+        if inp == '':
             pi.set_servo_pulsewidth(ESC, min_value)
             print ("Wierd eh! Special tone")
             time.sleep(7)
