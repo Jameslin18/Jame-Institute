@@ -11,11 +11,9 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 
 ESC = 0  # Connect the ESC in this GPIO pin
 
-os.system("export PIGPIO_ADDR=soft")
-os.system("export PIGPIO_PORT=8888")
-pi = pigpio.pi('soft', 8888)
+pi1 = pigpio.pi('soft', 8888)
 
-pi.set_servo_pulsewidth(ESC, 0)
+pi1.set_servo_pulsewidth(ESC, 0)
 
 max_value = 2000  # change this if your ESC's max value is different or leave it be
 min_value = 700  # change this if your ESC's min value is different or leave it be
