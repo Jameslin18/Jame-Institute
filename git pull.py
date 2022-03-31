@@ -10,5 +10,3 @@ time.sleep(1)
 os.system("Jameslin18")
 time.sleep(1)
 os.system("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")
-time.sleep(1)
-break
