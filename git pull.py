@@ -1,12 +1,12 @@
 import os
 import time
 
-os.system("sudo cd Desktop")
+os.chdir("/Desktop")
 time.sleep(1)
 os.system("sudo rm -r Jame-Institute")
 time.sleep(1)
 os.system("git clone https://github.com/Jameslin18/Jame-Institute.git")
 time.sleep(1)
-os.system("Jameslin18")
+print("Jameslin18\n")
 time.sleep(1)
-os.system("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")
+print("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\n")
