@@ -1,7 +1,7 @@
 import os
 import time
 
-os.system("cd Desktop/")
+os.system("cd Desktop")
 time.sleep(1)
 os.system("sudo rm -r Jame-Institute")
 time.sleep(1)
