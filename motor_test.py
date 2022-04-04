@@ -11,7 +11,7 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 
 ESC = 0  # Connect the ESC in this GPIO pin
 
-pi1 = pigpio.pi('soft', 8888)
+pi1 = pigpio.pi('jame', 8888)
 
 pi1.set_servo_pulsewidth(ESC, 0)
 
