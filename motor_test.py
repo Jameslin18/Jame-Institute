@@ -11,7 +11,7 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 
 ESC = 0  # Connect the ESC in this GPIO pin
 
-pi1 = pigpio.pi('jame', 8888)
+pi1 = pigpio.pi('jame', 8889)
 
 pi1.set_servo_pulsewidth(ESC, 0)
 
@@ -116,16 +116,16 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
-inp = raw_input()
-if inp == "manual":
+u_inp = raw_input()
+if u_inp == "manual":
     manual_drive()
-elif inp == "calibrate":
+elif u_inp == "calibrate":
     calibrate()
-elif inp == "arm":
+elif u_inp == "arm":
     arm()
-elif inp == "control":
+elif u_inp == "control":
     control()
-elif inp == "stop":
+elif u_inp == "stop":
     stop()
 else:
     print("cringe.")
