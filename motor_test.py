@@ -23,21 +23,21 @@ print("cal OR man OR con OR arm OR stop \n")
 
 
 def raw_input():
-    print("Input:\n")
+    print("Input:")
     input()
 
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
-        raw_input()
-        if raw_input() == "stop":
+        inp = raw_input()
+        if inp == "stop":
             stop()
             break
-        elif raw_input() == "con":
+        elif inp == "con":
             control()
             break
-        elif raw_input() == "arm":
+        elif inp == "arm":
             arm()
             break
         else:
@@ -47,12 +47,12 @@ def manual_drive():  # You will use this function to program your ESC if require
 def calibrate():  # This is the auto calibration procedure of a normal ESC
     pi.set_servo_pulsewidth(ESC, 0)
     print("Disconnect the battery and press Enter")
-    raw_input()
-    if raw_input() == '':
+    inp = raw_input()
+    if inp == '':
         pi.set_servo_pulsewidth(ESC, max_value)
         print("Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
         raw_input()
-        if raw_input() == '':
+        if inp == '':
             pi.set_servo_pulsewidth(ESC, min_value)
             print("Weird eh! Special tone")
             time.sleep(7)
@@ -76,27 +76,27 @@ def control():
         "Controls - a to decrease speed & d to increase speed OR q to decrease a lot of speed & e to increase a lot of speed")
     while True:
         pi.set_servo_pulsewidth(ESC, speed)
-        raw_input()
+        inp = raw_input()
 
-        if raw_input() == "q":
+        if inp == "q":
             speed -= 100  # decrementing the speed like hell
             print("speed = %d" % speed)
-        elif raw_input() == "e":
+        elif inp == "e":
             speed += 100  # incrementing the speed like hell
             print("speed = %d" % speed)
-        elif raw_input() == "d":
+        elif inp == "d":
             speed += 10  # incrementing the speed
             print("speed = %d" % speed)
-        elif raw_input() == "a":
+        elif inp == "a":
             speed -= 10  # decrementing the speed
             print("speed = %d" % speed)
-        elif raw_input() == "stop":
+        elif inp == "stop":
             stop()  # going for the stop function
             break
-        elif raw_input() == "man":
+        elif inp == "man":
             manual_drive()
             break
-        elif raw_input() == "arm":
+        elif inp == "arm":
             arm()
             break
         else:
@@ -105,8 +105,8 @@ def control():
 
 def arm():  # This is the arming procedure of an ESC
     print("Connect the battery and press Enter")
-    raw_input()
-    if raw_input() == '':
+    inp = raw_input()
+    if inp == '':
         pi.set_servo_pulsewidth(ESC, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(ESC, max_value)
@@ -122,16 +122,16 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
-raw_input()
-if raw_input() == "man":
+u_inp = raw_input()
+if u_inp == "man":
     manual_drive()
-elif raw_input() == "cal":
+elif u_inp == "cal":
     calibrate()
-elif raw_input() == "arm":
+elif u_inp == "arm":
     arm()
-elif raw_input() == "con":
+elif u_inp == "con":
     control()
-elif raw_input() == "stop":
+elif u_inp == "stop":
     stop()
 else:
     print("cringe.")
