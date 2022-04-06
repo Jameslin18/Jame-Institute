@@ -43,7 +43,7 @@ def manual_drive():  # You will use this function to program your ESC if require
         elif inp == "arm":
             arm()
             break
-        elif inp >= max_value:
+        elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_servo_pulsewidth(ESC, max_value)
         else:
