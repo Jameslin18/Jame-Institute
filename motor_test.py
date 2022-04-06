@@ -33,6 +33,7 @@ def manual_drive():  # You will use this function to program your ESC if require
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
         inp = raw_input()
+
         if inp == "stop":
             stop()
             break
@@ -42,8 +43,14 @@ def manual_drive():  # You will use this function to program your ESC if require
         elif inp == "arm":
             arm()
             break
+        elif inp >= max_value:
+            print("Maximum value is ", max_value)
+            pi.set_servo_pulsewidth(ESC, max_value)
         else:
             pi.set_servo_pulsewidth(ESC, raw_input())
+
+        print(pi.get_servo_pulsewidth(ESC))
+        time.sleep(5)
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
