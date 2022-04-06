@@ -25,6 +25,7 @@ print("cal OR man OR con OR arm OR stop \n")
 def raw_input():
     print("Input:")
     input()
+    print(input())
 
 
 def manual_drive():  # You will use this function to program your ESC if required
