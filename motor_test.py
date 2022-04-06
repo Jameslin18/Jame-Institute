@@ -24,8 +24,8 @@ print("cal OR man OR con OR arm OR stop \n")
 
 def raw_input():
     print("Input:")
-    input()
-    return input()
+    inp = input()
+    return inp
 
 
 
