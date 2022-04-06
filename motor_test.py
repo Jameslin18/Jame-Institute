@@ -16,39 +16,43 @@ pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(ESC, 0)
 
-max_value = 2000  # change this if your ESC's max value is different or leave it be
-min_value = 700  # change this if your ESC's min value is different or leave it be
+max_value = 2500  # change this if your ESC's max value is different or leave it be
+min_value = 500  # change this if your ESC's min value is different or leave it be
 print("For first time launch, select calibrate \n")
 print("cal OR man OR con OR arm OR stop \n")
+
+
+def raw_input():
+    print("Input:\n")
+    input()
 
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
-        inp = input()
-        if inp == "stop":
+        raw_input()
+        if raw_input() == "stop":
             stop()
             break
-        elif inp == "con":
+        elif raw_input() == "con":
             control()
             break
-        elif inp == "arm":
+        elif raw_input() == "arm":
             arm()
             break
         else:
-            pi.set_servo_pulsewidth(ESC, inp)
+            pi.set_servo_pulsewidth(ESC, raw_input())
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
     pi.set_servo_pulsewidth(ESC, 0)
     print("Disconnect the battery and press Enter")
-    inp = input()
-    if inp == '':
+    raw_input()
+    if raw_input() == '':
         pi.set_servo_pulsewidth(ESC, max_value)
-        print(
-            "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
-        inp = input()
-        if inp == '':
+        print("Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
+        raw_input()
+        if raw_input() == '':
             pi.set_servo_pulsewidth(ESC, min_value)
             print("Weird eh! Special tone")
             time.sleep(7)
@@ -72,27 +76,27 @@ def control():
         "Controls - a to decrease speed & d to increase speed OR q to decrease a lot of speed & e to increase a lot of speed")
     while True:
         pi.set_servo_pulsewidth(ESC, speed)
-        inp = input()
+        raw_input()
 
-        if inp == "q":
+        if raw_input() == "q":
             speed -= 100  # decrementing the speed like hell
             print("speed = %d" % speed)
-        elif inp == "e":
+        elif raw_input() == "e":
             speed += 100  # incrementing the speed like hell
             print("speed = %d" % speed)
-        elif inp == "d":
+        elif raw_input() == "d":
             speed += 10  # incrementing the speed
             print("speed = %d" % speed)
-        elif inp == "a":
+        elif raw_input() == "a":
             speed -= 10  # decrementing the speed
             print("speed = %d" % speed)
-        elif inp == "stop":
+        elif raw_input() == "stop":
             stop()  # going for the stop function
             break
-        elif inp == "man":
+        elif raw_input() == "man":
             manual_drive()
             break
-        elif inp == "arm":
+        elif raw_input() == "arm":
             arm()
             break
         else:
@@ -101,8 +105,8 @@ def control():
 
 def arm():  # This is the arming procedure of an ESC
     print("Connect the battery and press Enter")
-    inp = input()
-    if inp == '':
+    raw_input()
+    if raw_input() == '':
         pi.set_servo_pulsewidth(ESC, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(ESC, max_value)
@@ -118,16 +122,16 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
-u_inp = input()
-if u_inp == "man":
+raw_input()
+if raw_input() == "man":
     manual_drive()
-elif u_inp == "cal":
+elif raw_input() == "cal":
     calibrate()
-elif u_inp == "arm":
+elif raw_input() == "arm":
     arm()
-elif u_inp == "con":
+elif raw_input() == "con":
     control()
-elif u_inp == "stop":
+elif raw_input() == "stop":
     stop()
 else:
     print("cringe.")
