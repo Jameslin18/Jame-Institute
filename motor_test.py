@@ -59,12 +59,12 @@ def raw_input():
 
 def send_1000():
     while True:
-        #pi.set_mode(motor_1, pigpio.OUTPUT)
-        #pi.set_servo_pulsewidth(motor_1, 1000)
-        pi.set_PWM_frequency(motor_1, 60)
+        pi.set_mode(motor_1, pigpio.OUTPUT)
+        pi.set_servo_pulsewidth(motor_1, 1000)
+        #pi.set_PWM_frequency(motor_1, 60)
         pi.set_PWM_dutycycle(motor_1, 255)
-        # pi.set_mode(motor_1, pigpio.INPUT)
-        # print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
+        pi.set_mode(motor_1, pigpio.INPUT)
+        print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
 
 
 def manual_drive():  # You will use this function to program your ESC if required
