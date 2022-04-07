@@ -44,7 +44,7 @@ def init():
     elif inp == "cs_on":
         cont_servo()
     elif inp == "send":
-        send_1000()
+        send()
     elif inp == "stop":
         stop()
     else:
@@ -57,14 +57,11 @@ def raw_input():
     return inp
 
 
-def send_1000():
-    while True:
-        pi.set_mode(motor_1, pigpio.OUTPUT)
-        pi.set_servo_pulsewidth(motor_1, 1000)
-        #pi.set_PWM_frequency(motor_1, 60)
-        pi.set_PWM_dutycycle(motor_1, 255)
-        #pi.set_mode(motor_1, pigpio.INPUT)
-        #print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
+def send():
+    pi.set_PWM_frequency(motor_1, 100000)
+    pi.set_PWM_dutycycle(motor_1, 255)
+    print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
+
 
 
 def manual_drive():  # You will use this function to program your ESC if required
@@ -85,7 +82,7 @@ def manual_drive():  # You will use this function to program your ESC if require
             cont_servo()
             break
         elif str(inp) == "send":
-            send_1000()
+            send()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_servo_pulsewidth(motor_1, max_value)
