@@ -72,19 +72,19 @@ def manual_drive():  # You will use this function to program your ESC if require
     while True:
         inp = raw_input()
 
-        if inp == "stop":
+        if str(inp) == "stop":
             stop()
             break
-        elif inp == "con":
+        elif str(inp) == "con":
             control()
             break
-        elif inp == "arm":
+        elif str(inp) == "arm":
             arm()
             break
-        elif inp == "cs_on":
+        elif str(inp) == "cs_on":
             cont_servo()
             break
-        elif inp == "send":
+        elif str(inp) == "send":
             send_1000()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
