@@ -60,7 +60,7 @@ def raw_input():
 def send_1000():
     while True:
         pi.set_servo_pulsewidth(motor_1, 1000)
-        pi.set_PWM_frequency(motor_1, 48000)
+        pi.set_PWM_frequency(motor_1, 24000)
         pi.set_PWM_dutycycle(motor_1, 255)
 
 
