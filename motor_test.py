@@ -74,10 +74,8 @@ def manual_drive():  # You will use this function to program your ESC if require
             cont_servo()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
-            set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
-            set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, raw_input())
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
