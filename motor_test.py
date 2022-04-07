@@ -13,13 +13,13 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 print("For first time launch, select calibrate \n")
 
 # Connect the ESC in this GPIO pin
-motor_1 = 17  # left
+motor_1 = 13  # left
 motor_2 = 27  #
 motor_3 = 22  #
 
 servo_1 = 5  #
 servo_2 = 6  #
-servo_3 = 13  #
+servo_3 = 3  #
 
 pi = pigpio.pi()
 
@@ -59,6 +59,7 @@ def raw_input():
 
 def send_1000():
     while True:
+        pi.set_mode(motor_1, pigpio.ALT0)
         pi.set_servo_pulsewidth(motor_1, 1000)
         pi.set_PWM_frequency(motor_1, 24000)
         pi.set_PWM_dutycycle(motor_1, 255)
