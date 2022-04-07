@@ -60,7 +60,7 @@ def raw_input():
 def send():
     pi.set_PWM_frequency(motor_1, 100000)
     pi.set_PWM_dutycycle(motor_1, 255)
-    print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
+    #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
 
 
 
