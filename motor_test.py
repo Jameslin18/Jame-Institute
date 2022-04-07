@@ -82,7 +82,7 @@ def manual_drive():  # You will use this function to program your ESC if require
             break
         elif inp == "cs_on":
             cont_servo()
-        elif inp == "1k":
+        elif inp == "send":
             send_1000()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
