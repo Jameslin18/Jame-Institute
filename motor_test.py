@@ -30,7 +30,7 @@ min_value = 500  # change this if your ESC's min value is different or leave it 
 
 
 def init():
-    print("| cal | man | con | arm | cs_on | stop | 1k |\n")
+    print("| cal | man | con | arm | cs_on | stop | send |\n")
 
     inp = raw_input()
     if inp == "man":
@@ -43,7 +43,7 @@ def init():
         control()
     elif inp == "cs_on":
         cont_servo()
-    elif inp == "1k":
+    elif inp == "send":
         send_1000()
     elif inp == "stop":
         stop()
@@ -62,6 +62,8 @@ def send_1000():
         pi.set_servo_pulsewidth(motor_1, 1000)
         pi.set_PWM_frequency(motor_1, 24000)
         pi.set_PWM_dutycycle(motor_1, 255)
+        print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
+
 
 
 def manual_drive():  # You will use this function to program your ESC if required
