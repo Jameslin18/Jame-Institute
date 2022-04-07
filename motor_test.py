@@ -61,7 +61,7 @@ def send_1000():
     while True:
         pi.set_mode(motor_1, pigpio.ALT0)
         pi.set_servo_pulsewidth(motor_1, 1000)
-        pi.set_PWM_frequency(motor_1, 24000)
+        pi.set_PWM_frequency(motor_1, 60)
         pi.set_PWM_dutycycle(motor_1, 255)
         #print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
 
