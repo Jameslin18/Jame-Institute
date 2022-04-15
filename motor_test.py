@@ -25,7 +25,7 @@ pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(motor_1, 0)
 
-max_value = 2000  # change this if your ESC's max value is different or leave it be
+max_value = 10000  # change this if your ESC's max value is different or leave it be
 min_value = 1000  # change this if your ESC's min value is different or leave it be
 
 
@@ -78,14 +78,14 @@ def manual_drive():  # You will use this function to program your ESC if require
             break
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
-            pi.set_PWM_frequency(motor_1, 16000)
+            pi.set_PWM_frequency(motor_1, 37500)
             pi.set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
-            pi.set_PWM_frequency(motor_1, 16000)
-            pi.set_PWM_dutycycle(motor_1, 255)
-            pi.set_servo_pulsewidth(motor_1, raw_input())
-            time.sleep(10)
+            while True:
+                pi.set_PWM_frequency(motor_1, 37500)
+                pi.set_PWM_dutycycle(motor_1, 255)
+                pi.set_servo_pulsewidth(motor_1, raw_input())
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
 
@@ -152,6 +152,12 @@ def arm():  # This is the arming procedure of an ESC
     print("Connect the battery and press Enter")
     inp = raw_input()
     if inp == '':
+        pi.set_servo_pulsewidth(motor_1, 0)
+        time.sleep(1)
+        pi.set_servo_pulsewidth(motor_1, max_value)
+        time.sleep(1)
+        pi.set_servo_pulsewidth(motor_1, min_value)
+        time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, max_value)
