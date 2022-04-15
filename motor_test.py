@@ -70,7 +70,7 @@ def manual_drive():  # You will use this function to program your ESC if require
     while True:
         inp = raw_input()
 
-        if inp == "menu":
+        if str(inp) == "menu":
             menu()
             break
         elif int(inp) >= max_value:
