@@ -25,8 +25,8 @@ pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(motor_1, 0)
 
-max_value = 2500  # change this if your ESC's max value is different or leave it be
-min_value = 500  # change this if your ESC's min value is different or leave it be
+max_value = 2000  # change this if your ESC's max value is different or leave it be
+min_value = 1000  # change this if your ESC's min value is different or leave it be
 
 
 def init():
@@ -58,8 +58,9 @@ def raw_input():
 
 
 def send():
-    pi.set_PWM_frequency(motor_1, 100000)
-    pi.set_PWM_dutycycle(motor_1, 255)
+    pi.set_PWM_frequency(motor_1, 16000)
+    #pi.set_PWM_dutycycle(motor_1, 255)
+    pi.set_servo_pulsewidth(motor_1, 1700)
     #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
 
 
