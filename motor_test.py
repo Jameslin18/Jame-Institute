@@ -70,20 +70,9 @@ def manual_drive():  # You will use this function to program your ESC if require
     while True:
         inp = raw_input()
 
-        if str(inp) == "stop":
-            stop()
+        if str(inp) == "menu":
+            menu()
             break
-        elif str(inp) == "con":
-            control()
-            break
-        elif str(inp) == "arm":
-            arm()
-            break
-        elif str(inp) == "cs_on":
-            cont_servo()
-            break
-        elif str(inp) == "send":
-            send()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_PWM_frequency(motor_1, 16000)
@@ -95,7 +84,7 @@ def manual_drive():  # You will use this function to program your ESC if require
             pi.set_servo_pulsewidth(motor_1, raw_input())
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
-        time.sleep(0.00005)
+        time.sleep(10)
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
