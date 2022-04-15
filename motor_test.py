@@ -69,8 +69,10 @@ def manual_drive():  # You will use this function to program your ESC if require
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
         inp = raw_input()
-
-        if str(inp) == "menu":
+        if str(inp) == "stop":
+            stop()
+            break
+        elif str(inp) == "menu":
             menu()
             break
         elif int(inp) >= max_value:
