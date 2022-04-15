@@ -13,13 +13,13 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 print("For first time launch, select calibrate \n")
 
 # Connect the ESC in this GPIO pin
-motor_1 = 17    #left
-motor_2 = 27    #
-motor_3 = 22    #
+motor_1 = 17  # left
+motor_2 = 27  #
+motor_3 = 22  #
 
-servo_1 = 5     #
-servo_2 = 6     #
-servo_3 = 13    #
+servo_1 = 5  #
+servo_2 = 6  #
+servo_3 = 13  #
 
 pi = pigpio.pi()
 
@@ -30,7 +30,7 @@ min_value = 500  # change this if your ESC's min value is different or leave it 
 
 
 def init():
-    print("| cal | man | con | arm | cs_on | stop |\n")
+    print("| cal | man | con | arm | cs_on | stop | send |\n")
 
     inp = raw_input()
     if inp == "man":
@@ -43,6 +43,8 @@ def init():
         control()
     elif inp == "cs_on":
         cont_servo()
+    elif inp == "send":
+        send()
     elif inp == "stop":
         stop()
     else:
@@ -55,33 +57,40 @@ def raw_input():
     return inp
 
 
+def send():
+    pi.set_PWM_frequency(motor_1, 100000)
+    pi.set_PWM_dutycycle(motor_1, 255)
+    #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
+
+
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
         inp = raw_input()
 
-        if inp == "stop":
+        if str(inp) == "stop":
             stop()
             break
-        elif inp == "con":
+        elif str(inp) == "con":
             control()
             break
-        elif inp == "arm":
+        elif str(inp) == "arm":
             arm()
             break
-        elif inp == "cs_on":
+        elif str(inp) == "cs_on":
             cont_servo()
+            break
+        elif str(inp) == "send":
+            send()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
-            set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
-            set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, raw_input())
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
-        time.sleep(5)
+        time.sleep(3)
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
@@ -90,7 +99,8 @@ def calibrate():  # This is the auto calibration procedure of a normal ESC
     inp = raw_input()
     if inp == '':
         pi.set_servo_pulsewidth(motor_1, max_value)
-        print("Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
+        print(
+            "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
         raw_input()
         if inp == '':
             pi.set_servo_pulsewidth(motor_1, min_value)
@@ -153,18 +163,19 @@ def arm():  # This is the arming procedure of an ESC
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
         time.sleep(1)
-        manual_drive()
+        control()
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
     pi.set_servo_pulsewidth(motor_1, 0)
     pi.stop()
 
+
 def cont_servo():
-    set_servo_pulsewidth(servo_1, 500)
+    pi.set_servo_pulsewidth(servo_1, 500)
     inp = raw_input()
     if inp == "s off":
-        set_servo_pulsewidth(servo_1, 0)
+        pi.set_servo_pulsewidth(servo_1, 0)
         init()
 
 
