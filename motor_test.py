@@ -166,6 +166,8 @@ def arm():  # This is the arming procedure of an ESC
         pi.set_servo_pulsewidth(motor_1, max_value)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
+        time.sleep(1)
+        pi.set_servo_pulsewidth(motor_1, 0)
         manual_drive()
 
 
