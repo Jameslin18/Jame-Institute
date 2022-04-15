@@ -62,6 +62,7 @@ def send():
     pi.set_PWM_dutycycle(motor_1, 255)
     pi.set_servo_pulsewidth(motor_1, 1700)
     #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
+    menu()
 
 
 
