@@ -96,7 +96,10 @@ def calibrate():  # This is the auto calibration procedure of a normal ESC
     print("Disconnect the battery and press Enter")
     inp = raw_input()
     if inp == '':
-        pi.set_servo_pulsewidth(motor_1, max_value)
+        time.sleep(1)
+        pi.set_servo_pulsewidth(motor_1, 0)
+        time.sleep(1)
+        pi.set_servo_pulsewidth(motor_1, 1500)
         print(
             "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
         raw_input()
