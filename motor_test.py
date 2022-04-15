@@ -161,6 +161,8 @@ def arm():  # This is the arming procedure of an ESC
     print("Connect the battery and press Enter")
     inp = raw_input()
     if inp == '':
+        pi.set_servo_pulsewidth(motor_1, 1200)
+        time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, max_value)
