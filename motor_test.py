@@ -29,7 +29,7 @@ max_value = 2000  # change this if your ESC's max value is different or leave it
 min_value = 1000  # change this if your ESC's min value is different or leave it be
 
 
-def init():
+def menu():
     print("| cal | man | con | arm | cs_on | stop | send |\n")
 
     inp = raw_input()
@@ -59,7 +59,7 @@ def raw_input():
 
 def send():
     pi.set_PWM_frequency(motor_1, 16000)
-    #pi.set_PWM_dutycycle(motor_1, 255)
+    pi.set_PWM_dutycycle(motor_1, 255)
     pi.set_servo_pulsewidth(motor_1, 1700)
     #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
 
@@ -144,11 +144,8 @@ def control():
         elif inp == "stop":
             stop()  # going for the stop function
             break
-        elif inp == "man":
-            manual_drive()
-            break
-        elif inp == "arm":
-            arm()
+        elif inp == "menu":
+            menu()
             break
         else:
             print("bruh")
@@ -164,7 +161,7 @@ def arm():  # This is the arming procedure of an ESC
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
         time.sleep(1)
-        control()
+        send()
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
@@ -177,8 +174,8 @@ def cont_servo():
     inp = raw_input()
     if inp == "s off":
         pi.set_servo_pulsewidth(servo_1, 0)
-        init()
+        menu()
 
 
-init()
+menu()
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
