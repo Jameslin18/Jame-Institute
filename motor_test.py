@@ -86,12 +86,16 @@ def manual_drive():  # You will use this function to program your ESC if require
             send()
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
+            pi.set_PWM_frequency(motor_1, 16000)
+            pi.set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
+            pi.set_PWM_frequency(motor_1, 16000)
+            pi.set_PWM_dutycycle(motor_1, 255)
             pi.set_servo_pulsewidth(motor_1, raw_input())
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
-        time.sleep(3)
+        time.sleep(0.00005)
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
@@ -161,7 +165,7 @@ def arm():  # This is the arming procedure of an ESC
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
         time.sleep(1)
-        send()
+        manual_drive()
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
