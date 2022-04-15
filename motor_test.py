@@ -76,6 +76,9 @@ def manual_drive():  # You will use this function to program your ESC if require
         elif str(inp) == "menu":
             menu()
             break
+        elif str(inp) == "send":
+            send()
+            break
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_PWM_frequency(motor_1, 37500)
@@ -160,11 +163,6 @@ def arm():  # This is the arming procedure of an ESC
         pi.set_servo_pulsewidth(motor_1, max_value)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, max_value)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, min_value)
-        time.sleep(1)
         manual_drive()
 
 
