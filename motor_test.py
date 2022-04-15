@@ -25,7 +25,7 @@ pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(motor_1, 0)
 
-max_value = 2500  # change this if your ESC's max value is different or leave it be
+max_value = 2000  # change this if your ESC's max value is different or leave it be
 min_value = 1000  # change this if your ESC's min value is different or leave it be
 
 
@@ -161,8 +161,6 @@ def arm():  # This is the arming procedure of an ESC
         pi.set_servo_pulsewidth(motor_1, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, max_value)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, min_value)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, min_value)
         manual_drive()
