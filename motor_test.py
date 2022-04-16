@@ -22,7 +22,7 @@ servo_1 = 5  #
 servo_2 = 6  #
 servo_3 = 13  #
 
-duty_cycle = 100
+duty_cycle = 255
 freq = 37500
 
 pi = pigpio.pi()
@@ -189,7 +189,7 @@ def cont_servo():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(servo_1, GPIO.OUT)
 
-    p = GPIO.PWM(servo_1, 50)  # GPIO 17 for PWM with 50Hz
+    p = GPIO.PWM(servo_1, 100)  # GPIO 17 for PWM with 50Hz
     p.start(2.5)  # Initialization
     try:
         while True:
