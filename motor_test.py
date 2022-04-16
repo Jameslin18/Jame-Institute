@@ -4,6 +4,7 @@
 # This program is made by AGT @instructable.com. DO NOT REPUBLISH THIS PROGRAM... actually the program itself is harmful                                             pssst Its not, its safe.
 
 import pigpio  # importing GPIO library
+import RPi.GPIO as GPIO
 import os  # importing os library so as to communicate with the system
 import time  # importing time library to make Rpi wait because its too impatient
 
@@ -185,11 +186,32 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 def cont_servo():
-    pi.set_servo_pulsewidth(servo_1, 500)
-    inp = raw_input()
-    if inp == "s off":
-        pi.set_servo_pulsewidth(servo_1, 0)
-        menu()
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(servo_1, GPIO.OUT)
+
+    p = GPIO.PWM(servo_1, 50)  # GPIO 17 for PWM with 50Hz
+    p.start(2.5)  # Initialization
+    try:
+        while True:
+            p.ChangeDutyCycle(5)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(7.5)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(10)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(12.5)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(10)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(7.5)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(5)
+            time.sleep(0.5)
+            p.ChangeDutyCycle(2.5)
+            time.sleep(0.5)
+    except KeyboardInterrupt:
+        p.stop()
+        GPIO.cleanup()
 
 
 menu()
