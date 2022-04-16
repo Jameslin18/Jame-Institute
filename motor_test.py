@@ -190,31 +190,16 @@ def cont_servo():
     GPIO.setup(servo_1, GPIO.OUT)
 
     inp = raw_input()
-    p = GPIO.PWM(servo_1, 1000)  # GPIO 17 for PWM with 50Hz
-    p.start(2.5)  # Initialization
+    p = GPIO.PWM(servo_1, 1000)  # GPIO 17 for PWM with 1000Hz
+    p.start(5)  # Initialization
 
-    while True:
-        p.ChangeDutyCycle(5)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(7.5)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(10)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(12.5)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(10)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(7.5)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(5)
-        time.sleep(0.5)
-        p.ChangeDutyCycle(2.5)
-        time.sleep(0.5)
+    p.ChangeDutyCycle(2.5)
+    time.sleep(5)
+    p.ChangeDutyCycle(11.5)  # may need to be adjusted
 
-        if inp == "menu":
-            GPIO.cleanup()
-            menu()
-            break
+    if inp == "menu":
+        GPIO.cleanup()
+        menu()
 
 menu()
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
