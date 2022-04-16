@@ -189,30 +189,32 @@ def cont_servo():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(servo_1, GPIO.OUT)
 
+    inp = raw_input()
     p = GPIO.PWM(servo_1, 1000)  # GPIO 17 for PWM with 50Hz
     p.start(2.5)  # Initialization
-    try:
-        while True:
-            p.ChangeDutyCycle(5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(7.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(10)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(12.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(10)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(7.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(2.5)
-            time.sleep(0.5)
-    except KeyboardInterrupt:
-        p.stop()
-        GPIO.cleanup()
 
+    while True:
+        p.ChangeDutyCycle(5)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(7.5)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(10)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(12.5)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(10)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(7.5)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(5)
+        time.sleep(0.5)
+        p.ChangeDutyCycle(2.5)
+        time.sleep(0.5)
+
+        if inp == "menu":
+            GPIO.cleanup()
+            menu()
+            break
 
 menu()
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
