@@ -21,6 +21,9 @@ servo_1 = 5  #
 servo_2 = 6  #
 servo_3 = 13  #
 
+duty_cycle = 100
+freq = 37500
+
 pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(motor_1, 0)
@@ -58,13 +61,17 @@ def raw_input():
 
 
 def send():
-    pi.set_PWM_frequency(motor_1, 37500)
-    pi.set_PWM_dutycycle(motor_1, 255)
+    pi.set_PWM_frequency(motor_1, freq)
+    pi.set_PWM_dutycycle(motor_1, duty_cycle)
     pi.set_servo_pulsewidth(motor_1, 1700)
     #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
     menu()
 
-
+def send_inp():
+    pi.set_PWM_frequency(motor_1, freq)
+    pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    pi.set_servo_pulsewidth(motor_1, raw_input())
+    manual_drive()
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
@@ -81,14 +88,12 @@ def manual_drive():  # You will use this function to program your ESC if require
             break
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
-            pi.set_PWM_frequency(motor_1, 37500)
-            pi.set_PWM_dutycycle(motor_1, 255)
+            pi.set_PWM_frequency(motor_1, freq)
+            pi.set_PWM_dutycycle(motor_1, duty_cycle)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
-            while True:
-                pi.set_PWM_frequency(motor_1, 37500)
-                pi.set_PWM_dutycycle(motor_1, 255)
-                pi.set_servo_pulsewidth(motor_1, raw_input())
+            send_inp()
+            break
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
 
@@ -101,6 +106,7 @@ def calibrate():  # This is the auto calibration procedure of a normal ESC
     print("press Enter")
     inp = raw_input()
     if inp == '':
+        pi.set_servo_pulsewidth(motor_1, 1700)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, 0)
         time.sleep(1)
