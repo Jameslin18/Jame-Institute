@@ -64,10 +64,9 @@ def raw_input():
 
 
 def send():
-    while True:
-        pi.set_PWM_frequency(motor_1, freq)
-        pi.set_PWM_dutycycle(motor_1, duty_cycle)
-        pi.set_servo_pulsewidth(motor_1, 1700)
+    pi.set_PWM_frequency(motor_1, freq)
+    pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    pi.set_servo_pulsewidth(motor_1, 1700)
 
 def send_inp():
     pi.set_PWM_frequency(motor_1, freq)
@@ -101,19 +100,22 @@ def manual_drive():  # You will use this function to program your ESC if require
 
 def esc_settings():
     pi.set_servo_pulsewidth(motor_1, 0)
-    print("disconnect battery and press Enter")
+    print("Disconnect battery and press Enter")
     inp = raw_input()
     if inp == '':
         pi.set_servo_pulsewidth(motor_1, max_value)
         time.sleep(1)
         print(
-            "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
-        time.sleep(1)
-        print("press Enter at the intended sequence")
+            "Connect the battery now, press Enter at the intended sequence")
         raw_input()
         if inp == '':
-            pi.set_servo_pulsewidth(motor_1, 0)
-            print("ESC is set and you can disconnect battery.")
+            pi.set_servo_pulsewidth(motor_1, min_value)
+            print("Press Enter again when different sequence runs again")
+            raw_input()
+            if inp == '':
+                pi.set_servo_pulsewidth(motor_1, min_value)
+                print("There should be two beeps as confirmation.")
+                print("After this the ESC is set and you can disconnect battery.")
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
     pi.set_servo_pulsewidth(motor_1, 0)
