@@ -77,34 +77,30 @@ def send():
     menu()
 
 
-def send_inp():
-    pi.set_PWM_frequency(motor_1, freq)
-    pi.set_PWM_dutycycle(motor_1, duty_cycle)
-    pi.set_servo_pulsewidth(motor_1, raw_input())
-    manual_drive()
-
-
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
     while True:
         inp = raw_input()
-        if str(inp) == "stop":
-            stop()
-            break
-        elif str(inp) == "menu":
-            menu()
-            break
-        elif str(inp) == "send":
-            send()
-            break
-        elif int(inp) >= max_value:
+        if inp >= max_value:
             print("Maximum value is ", max_value)
             pi.set_PWM_frequency(motor_1, freq)
             pi.set_PWM_dutycycle(motor_1, duty_cycle)
             pi.set_servo_pulsewidth(motor_1, max_value)
-        else:
-            send_inp()
             break
+            menu()
+        elif inp<= 1100:
+            print("Minimum value is 1100")
+            pi.set_PWM_frequency(motor_1, freq)
+            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            pi.set_servo_pulsewidth(motor_1, 1100)
+            break
+            menu()
+        else:
+            pi.set_PWM_frequency(motor_1, freq)
+            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            pi.set_servo_pulsewidth(motor_1, raw_input())
+            break
+            menu()
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
 
@@ -213,42 +209,8 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 def cont_servo():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(servo_1, GPIO.OUT)
-    inp = raw_input()
-    p = GPIO.PWM(servo_1, 1000)  # GPIO 17 for PWM with 1000Hz
-    p.start(5)  # Initialization
-
-    p.ChangeDutyCycle(2.5)
-    time.sleep(5)
-    p.ChangeDutyCycle(11.5)  # may need to be adjusted
-
-    if inp == "menu":
-        GPIO.cleanup()
-        menu()
-    p = GPIO.PWM(servo_1, 1000)  # GPIO 17 for PWM with 50Hz
-    p.start(2.5)  # Initialization
-    try:
-        while True:
-            p.ChangeDutyCycle(5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(7.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(10)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(12.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(10)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(7.5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(5)
-            time.sleep(0.5)
-            p.ChangeDutyCycle(2.5)
-            time.sleep(0.5)
-    except KeyboardInterrupt:
-        p.stop()
-        GPIO.cleanup()
+    pi.set_servo_pulsewidth(servo_1, 2500)
+    menu()
 
 menu()
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
