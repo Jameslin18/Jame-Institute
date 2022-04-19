@@ -79,26 +79,26 @@ def send():
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
-    inp = raw_input()
+    throttle = raw_input()
 
-    if int(inp) > max_value:
+    if int(throttle) > max_value:
         print("Maximum value is ", max_value)
         pi.set_PWM_frequency(motor_1, freq)
         pi.set_PWM_dutycycle(motor_1, duty_cycle)
         pi.set_servo_pulsewidth(motor_1, max_value)
         menu()
 
-    elif int(inp) < 1100:
+    elif int(throttle) < 1100:
         print("Minimum value is 1100")
         pi.set_PWM_frequency(motor_1, freq)
         pi.set_PWM_dutycycle(motor_1, duty_cycle)
         pi.set_servo_pulsewidth(motor_1, 1100)
         menu()
-    else:
 
+    else:
         pi.set_PWM_frequency(motor_1, freq)
         pi.set_PWM_dutycycle(motor_1, duty_cycle)
-        pi.set_servo_pulsewidth(motor_1, raw_input())
+        pi.set_servo_pulsewidth(motor_1, throttle)
         menu()
 
 
