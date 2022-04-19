@@ -23,14 +23,14 @@ servo_2 = 6  #
 servo_3 = 13  #
 
 duty_cycle = 255
-freq = 37500
+freq = 8000
 
 pi = pigpio.pi()
 
 pi.set_servo_pulsewidth(motor_1, 0)
 
-max_value = 2000  # change this if your ESC's max value is different or leave it be
-min_value = 1000  # change this if your ESC's min value is different or leave it be
+max_value = 2500  # change this if your ESC's max value is different or leave it be
+min_value = 500  # change this if your ESC's min value is different or leave it be
 
 
 def menu():
@@ -102,32 +102,23 @@ def manual_drive():  # You will use this function to program your ESC if require
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
     pi.set_servo_pulsewidth(motor_1, 0)
-    print("connect battery and press Enter")
+    print("disconnect battery and press Enter")
+
     inp = raw_input()
     if inp == '':
-        pi.set_servo_pulsewidth(motor_1, 1700)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 0)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 1500)
-        time.sleep(1)
         print(
             "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
+        pi.set_servo_pulsewidth(motor_1, max_value)
         raw_input()
+
         if inp == '':
-            pi.set_servo_pulsewidth(motor_1, min_value)
-            print("Weird eh! Special tone")
-            time.sleep(7)
-            print("Wait for it ....")
             time.sleep(5)
-            print("Im working on it, DONT WORRY JUST WAIT.....")
-            pi.set_servo_pulsewidth(motor_1, 0)
-            time.sleep(2)
-            print("Arming motor now...")
             pi.set_servo_pulsewidth(motor_1, min_value)
-            time.sleep(1)
-            print("See.... uhhhhh")
-            manual_drive()  # You can change this to any other function you want
+            print("the motor will beep 4 times, twice short and twice long")
+            raw_input()
+            if inp == "":
+                pi.set_servo_pulsewidth(motor_1, 0)
+                menu()  # You can change this to any other function you want
 
 
 def control():
@@ -166,8 +157,6 @@ def arm():  # This is the arming procedure of an ESC
     print("Connect the battery and press Enter")
     inp = raw_input()
     if inp == '':
-        pi.set_servo_pulsewidth(motor_1, 1200)
-        time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, 0)
         time.sleep(1)
         pi.set_servo_pulsewidth(motor_1, max_value)
