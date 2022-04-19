@@ -111,6 +111,7 @@ def esc_settings():
             "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
         time.sleep(1)
         print("press Enter at the intended sequence")
+        raw_input()
         if inp == '':
             pi.set_servo_pulsewidth(motor_1, 0)
             print("ESC is set and you can disconnect battery.")
