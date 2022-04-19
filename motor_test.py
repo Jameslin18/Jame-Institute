@@ -101,10 +101,8 @@ def manual_drive():  # You will use this function to program your ESC if require
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
-    arm()
-    time.sleep(1)
     pi.set_servo_pulsewidth(motor_1, 0)
-    print("press Enter")
+    print("connect battery and press Enter")
     inp = raw_input()
     if inp == '':
         pi.set_servo_pulsewidth(motor_1, 1700)
