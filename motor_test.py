@@ -23,7 +23,7 @@ servo_2 = 6  #
 servo_3 = 13  #
 
 duty_cycle = 255
-freq = 37500
+freq = 16000
 
 pi = pigpio.pi()
 
@@ -64,11 +64,10 @@ def raw_input():
 
 
 def send():
-    pi.set_PWM_frequency(motor_1, freq)
-    pi.set_PWM_dutycycle(motor_1, duty_cycle)
-    pi.set_servo_pulsewidth(motor_1, 1700)
-    #print("Freq: ", pi.get_PWM_frequency(motor_1), "Hz")
-    menu()
+    while True:
+        pi.set_PWM_frequency(motor_1, freq)
+        pi.set_PWM_dutycycle(motor_1, duty_cycle)
+        pi.set_servo_pulsewidth(motor_1, 1700)
 
 def send_inp():
     pi.set_PWM_frequency(motor_1, freq)
