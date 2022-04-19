@@ -73,7 +73,7 @@ def esc_startup():
 def send():
     pi.set_PWM_frequency(motor_1, freq)
     pi.set_PWM_dutycycle(motor_1, duty_cycle)
-    pi.set_servo_pulsewidth(motor_1, 900)
+    pi.set_servo_pulsewidth(motor_1, 1000)
     menu()
 
 
