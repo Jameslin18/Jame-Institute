@@ -34,7 +34,7 @@ min_value = 1000  # change this if your ESC's min value is different or leave it
 
 
 def menu():
-    print("| cal | set | man | con | arm | cs_on | stop | send |\n")
+    print("| cal | set | man | con | arm | cs_on | stop | send | start |\n")
 
     inp = raw_input()
     if inp == "man":
@@ -51,6 +51,8 @@ def menu():
         cont_servo()
     elif inp == "send":
         send()
+    elif inp == "start":
+        esc_startup()
     elif inp == "stop":
         stop()
     else:
@@ -63,16 +65,22 @@ def raw_input():
     return inp
 
 
+def esc_startup():
+    pi.set_servo_pulsewidth(motor_1, min_value)
+
+
 def send():
     pi.set_PWM_frequency(motor_1, freq)
-    pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    #pi.set_PWM_dutycycle(motor_1, duty_cycle)
     pi.set_servo_pulsewidth(motor_1, 1700)
+
 
 def send_inp():
     pi.set_PWM_frequency(motor_1, freq)
-    pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    #pi.set_PWM_dutycycle(motor_1, duty_cycle)
     pi.set_servo_pulsewidth(motor_1, raw_input())
     manual_drive()
+
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
@@ -90,13 +98,14 @@ def manual_drive():  # You will use this function to program your ESC if require
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            #pi.set_PWM_dutycycle(motor_1, duty_cycle)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
             send_inp()
             break
 
         print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
+
 
 def esc_settings():
     pi.set_servo_pulsewidth(motor_1, 0)
@@ -116,6 +125,7 @@ def esc_settings():
                 pi.set_servo_pulsewidth(motor_1, min_value)
                 print("There should be two beeps as confirmation.")
                 print("After this the ESC is set and you can disconnect battery.")
+
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
     pi.set_servo_pulsewidth(motor_1, 0)
