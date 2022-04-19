@@ -67,17 +67,18 @@ def raw_input():
 
 def esc_startup():
     pi.set_servo_pulsewidth(motor_1, min_value)
+    menu()
 
 
 def send():
     pi.set_PWM_frequency(motor_1, freq)
-    #pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    pi.set_PWM_dutycycle(motor_1, duty_cycle)
     pi.set_servo_pulsewidth(motor_1, 1700)
 
 
 def send_inp():
     pi.set_PWM_frequency(motor_1, freq)
-    #pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    pi.set_PWM_dutycycle(motor_1, duty_cycle)
     pi.set_servo_pulsewidth(motor_1, raw_input())
     manual_drive()
 
@@ -98,7 +99,7 @@ def manual_drive():  # You will use this function to program your ESC if require
         elif int(inp) >= max_value:
             print("Maximum value is ", max_value)
             pi.set_PWM_frequency(motor_1, freq)
-            #pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            pi.set_PWM_dutycycle(motor_1, duty_cycle)
             pi.set_servo_pulsewidth(motor_1, max_value)
         else:
             send_inp()
