@@ -79,30 +79,27 @@ def send():
 
 def manual_drive():  # You will use this function to program your ESC if required
     print("You have selected manual option so give a value between 0 and you max value")
-    while True:
-        inp = raw_input()
-        if inp >= max_value:
-            print("Maximum value is ", max_value)
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, max_value)
-            break
-            menu()
-        elif inp<= 1100:
-            print("Minimum value is 1100")
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, 1100)
-            break
-            menu()
-        else:
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, raw_input())
-            break
-            menu()
+    inp = raw_input()
 
-        print("motor_1 status: ", pi.get_servo_pulsewidth(motor_1))
+    if inp > max_value:
+        print("Maximum value is ", max_value)
+        pi.set_PWM_frequency(motor_1, freq)
+        pi.set_PWM_dutycycle(motor_1, duty_cycle)
+        pi.set_servo_pulsewidth(motor_1, max_value)
+        menu()
+
+    elif inp < 1100:
+        print("Minimum value is 1100")
+        pi.set_PWM_frequency(motor_1, freq)
+        pi.set_PWM_dutycycle(motor_1, duty_cycle)
+        pi.set_servo_pulsewidth(motor_1, 1100)
+        menu()
+    else:
+
+        pi.set_PWM_frequency(motor_1, freq)
+        pi.set_PWM_dutycycle(motor_1, duty_cycle)
+        pi.set_servo_pulsewidth(motor_1, raw_input())
+        menu()
 
 
 def esc_settings():
