@@ -41,16 +41,16 @@ def menu():
     print("----------------------------------------")
 
     inp = raw_input()
-    if inp == "man":
-        manual_drive()
-    elif inp == "set":
+    if inp == "set":
         esc_settings()
+    elif inp == "start":
+        esc_startup()
+    elif inp == "man":
+        manual_drive()
     elif inp == "cs":
         cont_servo()
     elif inp == "send":
         send()
-    elif inp == "start":
-        esc_startup()
     elif inp == "stop":
         stop()
     elif inp == "troll":
@@ -63,7 +63,6 @@ def menu():
 def raw_input():
     inp = input("\nInput: ")
     return inp
-
 
 
 def esc_startup():
@@ -149,89 +148,6 @@ def esc_settings():
                 menu()
 
 
-def calibrate():  # This is the auto calibration procedure of a normal ESC
-    pi.set_servo_pulsewidth(motor_1, 0)
-    print("disconnect battery and press Enter")
-    inp = raw_input()
-    if inp == '':
-        pi.set_servo_pulsewidth(motor_1, 1700)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 0)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 1500)
-        time.sleep(1)
-        print(
-            "Connect the battery NOW.. you will here two beeps, then wait for a gradual falling tone then press Enter")
-        raw_input()
-        if inp == '':
-            pi.set_servo_pulsewidth(motor_1, min_value)
-            print("Weird eh! Special tone")
-            time.sleep(7)
-            print("Wait for it ....")
-            time.sleep(5)
-            print("Im working on it, DONT WORRY JUST WAIT.....")
-            pi.set_servo_pulsewidth(motor_1, 0)
-            time.sleep(2)
-            print("Arming motor now...")
-            pi.set_servo_pulsewidth(motor_1, min_value)
-            time.sleep(1)
-            print("See.... uhhhhh")
-            manual_drive()  # You can change this to any other function you want
-
-
-def control():
-    print("I'm Starting the motor, I hope its calibrated and armed, if not restart by giving 'x'")
-    time.sleep(1)
-    speed = 1500  # change your speed if you want to.... it should be between 700 - 2000
-    print(
-        "Controls - a to decrease speed & d to increase speed OR q to decrease a lot of speed & e to increase a lot of speed")
-    while True:
-        pi.set_servo_pulsewidth(motor_1, speed)
-        inp = raw_input()
-
-        if inp == "q":
-            speed -= 100  # decrementing the speed like hell
-            print("speed = %d" % speed)
-        elif inp == "e":
-            speed += 100  # incrementing the speed like hell
-            print("speed = %d" % speed)
-        elif inp == "d":
-            speed += 10  # incrementing the speed
-            print("speed = %d" % speed)
-        elif inp == "a":
-            speed -= 10  # decrementing the speed
-            print("speed = %d" % speed)
-        elif inp == "stop":
-            stop()  # going for the stop function
-            break
-        elif inp == "menu":
-            menu()
-            break
-        else:
-            print("bruh")
-
-
-def arm():  # This is the arming procedure of an ESC
-    print("Connect the battery and press Enter")
-    inp = raw_input()
-    if inp == '':
-        pi.set_servo_pulsewidth(motor_1, 1200)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 0)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, max_value)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, min_value)
-        time.sleep(1)
-        pi.set_servo_pulsewidth(motor_1, 0)
-        manual_drive()
-
-
-def stop():  # This will stop every action your Pi is performing for ESC of course.
-    pi.set_servo_pulsewidth(motor_1, 0)
-    pi.stop()
-
-
 def cont_servo():
     print("You have selected continous servo control.")
     print("Enter menu to return.")
@@ -264,6 +180,11 @@ def cont_servo():
 
         else:
             print("cringe.")
+
+
+def stop():  # This will stop every action your Pi is performing for ESC of course.
+    pi.set_servo_pulsewidth(motor_1, 0)
+    pi.stop()
 
 
 def troll():
@@ -321,4 +242,3 @@ def troll():
 
 
 menu()
-# This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
