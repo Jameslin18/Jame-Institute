@@ -67,11 +67,11 @@ def menu():
 
 
 def raw_input():
-    inp = input("\nInput: ")
-    if type(inp) == int:
+    try:
+        inp = input("\nInput: ")
+    except:
         return int(inp)
-    elif type(inp) == str:
-        return str(inp)
+    return str(inp)
 
 
 def esc_startup():
