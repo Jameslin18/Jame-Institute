@@ -67,8 +67,11 @@ def menu():
 
 
 def raw_input():
-    inp = input("\nInput:")
-    return inp
+    inp = input("\nInput: ")
+    if type(inp) == int:
+        return int(inp)
+    elif type(inp) == str:
+        return str(inp)
 
 
 def esc_startup():
@@ -84,26 +87,26 @@ def send():
 
 
 def manual_drive():  # You will use this function to program your ESC if required
-    print("You have selected manual option, enter number to set throttle.")
+    print("\nYou have selected manual option, enter number to set throttle.")
     print("Enter 'menu' to return.")
 
     while True:
         throttle = raw_input()
 
         if type(throttle) == int:
-            if int(throttle) > max_value:
+            if throttle > max_value:
                 print("Maximum value is ", max_value, ".")
                 pi.set_PWM_frequency(motor_1, motor_freq)
                 pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
                 pi.set_servo_pulsewidth(motor_1, max_value)
 
-            elif 0 < int(throttle) < 1100:
+            elif 0 < throttle < 1100:
                 print("Minimum value is 1100.")
                 pi.set_PWM_frequency(motor_1, motor_freq)
                 pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
                 pi.set_servo_pulsewidth(motor_1, 1100)
 
-            elif int(throttle) == 0:
+            elif throttle == 0:
                 pi.set_servo_pulsewidth(motor_1, min_value)
 
             else:
