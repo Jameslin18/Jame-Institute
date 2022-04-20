@@ -67,11 +67,12 @@ def menu():
 
 
 def raw_input():
+    inp = input("\nInput: ")
     try:
-        inp = input("\nInput: ")
-    except:
-        return int(inp)
-    return str(inp)
+        inp = int(input)
+    except ValueError:
+        return str(inp)
+    
 
 
 def esc_startup():
