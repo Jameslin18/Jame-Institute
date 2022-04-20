@@ -90,6 +90,7 @@ def manual_drive():  # You will use this function to program your ESC if require
 
     while True:
         throttle = raw_input()
+        man_inp = raw_input()
 
         if int(throttle) > max_value:
             print("Maximum value is ", max_value)
@@ -102,8 +103,11 @@ def manual_drive():  # You will use this function to program your ESC if require
             pi.set_PWM_frequency(motor_1, motor_freq)
             pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
             pi.set_servo_pulsewidth(motor_1, 1100)
+        
+        elif int(throttle) == 0:
+            pi.set_servo_pulsewidth(motor_1, min_value)
 
-        elif str(throttle) == "menu":
+        elif str(man_inp) == 'menu':
             menu()
             break
 
@@ -245,7 +249,7 @@ def cont_servo():
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            cont = GPIO.PWM(servo_1, 50)
+            cont = GPIO.PWM(servo_1, 100)
             cont.start(0)
             cont.ChangeDutyCycle(5)  # left -90 deg position
 
