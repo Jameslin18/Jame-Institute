@@ -67,8 +67,7 @@ def menu():
 
 
 def raw_input():
-    print("\nInput:")
-    inp = input()
+    inp = input("\nInput:")
     return inp
 
 
@@ -91,32 +90,34 @@ def manual_drive():  # You will use this function to program your ESC if require
     while True:
         throttle = raw_input()
 
-        if int(throttle) > max_value:
-            print("Maximum value is ", max_value, ".")
-            pi.set_PWM_frequency(motor_1, motor_freq)
-            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, max_value)
+        if type(throttle) == int:
+            if int(throttle) > max_value:
+                print("Maximum value is ", max_value, ".")
+                pi.set_PWM_frequency(motor_1, motor_freq)
+                pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
+                pi.set_servo_pulsewidth(motor_1, max_value)
 
-        elif 0 < int(throttle) < 1100:
-            print("Minimum value is 1100.")
-            pi.set_PWM_frequency(motor_1, motor_freq)
-            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, 1100)
+            elif 0 < int(throttle) < 1100:
+                print("Minimum value is 1100.")
+                pi.set_PWM_frequency(motor_1, motor_freq)
+                pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
+                pi.set_servo_pulsewidth(motor_1, 1100)
 
-        elif int(throttle) == 0:
-            pi.set_servo_pulsewidth(motor_1, min_value)
+            elif int(throttle) == 0:
+                pi.set_servo_pulsewidth(motor_1, min_value)
 
-        elif throttle == "menu":
-            menu()
-            break
+            else:
+                pi.set_PWM_frequency(motor_1, motor_freq)
+                pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
+                pi.set_servo_pulsewidth(motor_1, throttle)
 
-        elif int(throttle):
-            pi.set_PWM_frequency(motor_1, motor_freq)
-            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-            pi.set_servo_pulsewidth(motor_1, throttle)
+        elif type(throttle) == str:
+            if throttle == "menu":
+                menu()
+                break
 
-        else:
-            print("cringe.")
+            else:
+                print("cringe.")
 
 
 def esc_settings():
