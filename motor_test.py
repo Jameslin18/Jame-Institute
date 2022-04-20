@@ -68,8 +68,12 @@ def menu():
 
 def raw_input():
     inp = input("\nInput: ")
+    return inp
+
+
+def input_check(inp):
     try:
-        val = int(input)
+        val = int(inp)
         return val
     except ValueError:
         return inp
