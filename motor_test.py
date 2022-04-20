@@ -1,5 +1,5 @@
 import pigpio  # importing GPIO library
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import os  # importing os library so as to communicate with the system
 import time  # importing time library to make Rpi wait because its too impatient
 
@@ -238,11 +238,16 @@ def cont_servo():
     print("Enter menu to return.")
     print("\n[left] [right] [stop] [off]")
 
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(servo_1, GPIO.OUT)
+
     while True:
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            pigs s servo_1 min_servo
+            cont = GPIO.PWM(servo_1, 50)
+            cont.start(0)
+            cont.ChangeDutyCycle(5)  # left -90 deg position
 
         elif servo_inp == "right":
             pi.set_PWM_frequency(motor_1, servo_freq)
