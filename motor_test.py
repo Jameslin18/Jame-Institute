@@ -6,26 +6,26 @@ import time  # importing time library to make Rpi wait because its too impatient
 os.system("sudo pigpiod")  # Launching GPIO library
 time.sleep(1)  # As i said it is too impatient and so if this delay is removed you will get an error
 
-print("For first time launch, select calibrate \n")
+print("For first time launch, select set \n")
 
 # Connect the ESC in this GPIO pin
 motor_1 = 17  # left
 motor_2 = 27  #
 motor_3 = 22  #
 
-servo_1 = 5  #
+servo_1 = 5  # continuous servo
 servo_2 = 6  #
 servo_3 = 13  #
 
 # max and min REV smart servo pulsewidth
-min_servo = 550
-max_servo = 2450
+min_servo = 500
+max_servo = 2500
 
 motor_duty_cycle = 255
 motor_freq = 16000
 
 servo_duty_cycle = 255
-servo_freq = 500
+servo_freq = 50
 
 pi = pigpio.pi()
 
@@ -149,7 +149,7 @@ def esc_settings():
 
 
 def cont_servo():
-    print("You have selected continous servo control.")
+    print("You have selected continuous servo control.")
     print("Enter menu to return.")
     print("\n[left] [right] [stop] [off]")
 
@@ -160,9 +160,9 @@ def cont_servo():
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            cont = GPIO.PWM(servo_1, 100)
-            cont.start(0)
-            cont.ChangeDutyCycle(5)  # left -90 deg position
+            pi.set_PWM_frequency(motor_1, servo_freq)
+            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo_1, max_servo)
 
         elif servo_inp == "right":
             pi.set_PWM_frequency(motor_1, servo_freq)
