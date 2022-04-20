@@ -1,10 +1,5 @@
-# This program will let you test your motor_1 and brushless motor.
-# Make sure your battery is not connected if you are going to calibrate it at first.
-# Since you are testing your motor, I hope you don't have your propeller attached to it otherwise you are in trouble my friend...?
-# This program is made by AGT @instructable.com. DO NOT REPUBLISH THIS PROGRAM... actually the program itself is harmful                                             pssst Its not, its safe.
-
 import pigpio  # importing GPIO library
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import os  # importing os library so as to communicate with the system
 import time  # importing time library to make Rpi wait because its too impatient
 
@@ -22,8 +17,15 @@ servo_1 = 5  #
 servo_2 = 6  #
 servo_3 = 13  #
 
-duty_cycle = 255
-freq = 16000
+# max and min REV smart servo pulsewidth
+min_servo = 550
+max_servo = 2450
+
+motor_duty_cycle = 255
+motor_freq = 16000
+
+servo_duty_cycle = 255
+servo_freq = 500
 
 pi = pigpio.pi()
 
@@ -35,8 +37,8 @@ min_value = 1000  # change this if your ESC's min value is different or leave it
 
 def menu():
     print("----------------------------------------------")
-    print("| cal | set | start | man | cs_on | stop |")
-    print("----------------------------------------------\n")
+    print("| cal | set | start | man | cs | stop |")
+    print("----------------------------------------------")
 
     inp = raw_input()
     if inp == "man":
@@ -49,7 +51,7 @@ def menu():
         arm()
     elif inp == "con":
         control()
-    elif inp == "cs_on":
+    elif inp == "cs":
         cont_servo()
     elif inp == "send":
         send()
@@ -61,6 +63,7 @@ def menu():
         troll()
     else:
         print("cringe.")
+        menu()
 
 
 def raw_input():
@@ -75,8 +78,8 @@ def esc_startup():
 
 
 def send():
-    pi.set_PWM_frequency(motor_1, freq)
-    pi.set_PWM_dutycycle(motor_1, duty_cycle)
+    pi.set_PWM_frequency(motor_1, motor_freq)
+    pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
     pi.set_servo_pulsewidth(motor_1, 1100)
     menu()
 
@@ -91,24 +94,27 @@ def manual_drive():  # You will use this function to program your ESC if require
 
         if int(throttle) > max_value:
             print("Maximum value is ", max_value)
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            pi.set_PWM_frequency(motor_1, motor_freq)
+            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
             pi.set_servo_pulsewidth(motor_1, max_value)
 
         elif int(throttle) < 1100:
             print("Minimum value is 1100")
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+            pi.set_PWM_frequency(motor_1, motor_freq)
+            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
             pi.set_servo_pulsewidth(motor_1, 1100)
 
         elif str(inp) == "menu":
             menu()
             break
 
-        else:
-            pi.set_PWM_frequency(motor_1, freq)
-            pi.set_PWM_dutycycle(motor_1, duty_cycle)
+        elif int(throttle):
+            pi.set_PWM_frequency(motor_1, motor_freq)
+            pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
             pi.set_servo_pulsewidth(motor_1, throttle)
+
+        else:
+            print("cringe.")
 
 
 def esc_settings():
@@ -121,14 +127,28 @@ def esc_settings():
         time.sleep(1)
         print("Connect the battery now, press Enter at the intended sequence.")
         raw_input()
+    else:
+        print("bruh.")
+        pi.set_servo_pulsewidth(motor_1, 0)
+        menu()
+
         if inp == '':
             pi.set_servo_pulsewidth(motor_1, min_value)
             print("Press Enter again when different sequence runs again.")
             raw_input()
+        else:
+            print("bruh.")
+            pi.set_servo_pulsewidth(motor_1, 0)
+            menu()
+
             if inp == '':
                 pi.set_servo_pulsewidth(motor_1, min_value)
                 print("There should be two beeps as confirmation.")
                 print("After this the ESC is set and you can disconnect battery.")
+            else:
+                print("bruh.")
+                pi.set_servo_pulsewidth(motor_1, 0)
+                menu()
 
 
 def calibrate():  # This is the auto calibration procedure of a normal ESC
@@ -215,34 +235,66 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
 
 
 def cont_servo():
-    pi.set_servo_pulsewidth(servo_1, 2500)
-    menu()
+    print("You have selected continous servo control.")
+    print("Enter menu to return.")
+    print("\n[left] [right] [stop] [off]")
+
+    while True:
+        servo_inp = raw_input()
+
+        if servo_inp == "left":
+            #pi.set_PWM_frequency(motor_1, servo_freq)
+            #pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo_1, max_servo)
+
+        elif servo_inp == "right":
+            # pi.set_PWM_frequency(motor_1, servo_freq)
+            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo_1, min_servo)
+
+        elif servo_inp == "stop":
+            # pi.set_PWM_frequency(motor_1, servo_freq)
+            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo_1, 1500)
+
+        elif servo_inp == "off":
+            # pi.set_PWM_frequency(motor_1, servo_freq)
+            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo_1, 0)
+
+        elif servo_inp == "menu":
+            menu()
+            break
+
+        else:
+            print("cringe.")
 
 
 def troll():
     print("\n"
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠶⠶⣶⠶⠶⠶⠶⠶⠶⠶⠶⠶⢶⠶⠶⠶⠤⠤⠤⠤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠊⠀⠀⠀⠀⠀⠀⠀⠀⠒⠒⠒⠀⠀⠀⠀⠤⢤⣤⣄⠉⠉⠛⠛⠷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⣰⠟⠀⠀⠀⠀⠀⠐⠋⢑⣤⣶⣶⣤⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣄⡂⠀⠀⠶⢄⠙⢷⣤⠀⠀⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⣸⡿⠚⠉⡀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⢢⠀⠀⡀⣰⣿⣿⣿⣿⣦⡀⠀⠀⠡⡀⢹⡆⠀⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⢀⣴⠏⠀⣀⣀⣀⡤⢤⣄⣠⣿⣿⣿⣿⣻⣿⣿⣷⠀⢋⣾⠈⠙⣶⠒⢿⣿⣿⣿⣿⡿⠟⠃⠀⡀⠡⠼⣧⡀⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⢀⣴⣿⢃⡴⢊⢽⣶⣤⣀⠀⠊⠉⠉⡛⢿⣿⣿⣿⠿⠋⢀⡀⠁⠀⠀⢸⣁⣀⣉⣉⣉⡉⠀⠩⡡⠀⣩⣦⠀⠈⠻⣦⡀⠀⠀⠀⠀\n",
-    "⠀⢠⡟⢡⠇⡞⢀⠆⠀⢻⣿⣿⣷⣄⠀⢀⠈⠂⠈⢁⡤⠚⡟⠉⠀⣀⣀⠀⠈⠳⣍⠓⢆⢀⡠⢀⣨⣴⣿⣿⡏⢀⡆⠀⢸⡇⠀⠀⠀⠀\n",
-    "⠀⣾⠁⢸⠀⠀⢸⠀⠀⠀⠹⣿⣿⣿⣿⣶⣬⣦⣤⡈⠀⠀⠇⠀⠛⠉⣩⣤⣤⣤⣿⣤⣤⣴⣾⣿⣿⣿⣿⣿⣧⠞⠀⠀⢸⡇⠀⠀⠀⠀\n",
-    "⠀⢹⣆⠸⠀⠀⢸⠀⠀⠀⠀⠘⢿⣿⣿⣿⣿⣿⣿⣟⣛⠛⠛⣛⡛⠛⠛⣛⣋⡉⠉⣡⠶⢾⣿⣿⣿⣿⣿⣿⡇⠀⠀⢀⣾⠃⠀⠀⠀⠀\n",
-    "⠀⠀⠻⣆⡀⠀⠈⢂⠀⠀⠀⠠⡈⢻⣿⣿⣿⣿⡟⠁⠈⢧⡼⠉⠙⣆⡞⠁⠈⢹⣴⠃⠀⢸⣿⣿⣿⣿⣿⣿⠃⠀⡆⣾⠃⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠈⢻⣇⠀⠀⠀⠀⠀⠀⢡⠀⠹⣿⣿⣿⣷⡀⠀⣸⡇⠀⠀⣿⠁⠀⠀⠘⣿⠀⠀⠘⣿⣿⣿⣿⣿⣿⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠹⣇⠀⠠⠀⠀⠀⠀⠡⠐⢬⡻⣿⣿⣿⣿⣿⣷⣶⣶⣿⣦⣤⣤⣤⣿⣦⣶⣿⣿⣿⣿⣿⣿⣿⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠹⣧⡀⠡⡀⠀⠀⠀⠑⠄⠙⢎⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⢿⡇⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠈⠳⣤⡐⡄⠀⠀⠀⠈⠂⠀⠱⣌⠻⣿⣿⣿⣿⣿⣿⣿⠿⣿⠟⢻⡏⢻⣿⣿⣿⣿⣿⣿⣿⠀⢸⡇⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢮⣦⡀⠂⠀⢀⠀⠀⠈⠳⣈⠻⣿⣿⣿⡇⠘⡄⢸⠀⠀⣇⠀⣻⣿⣿⣿⣿⣿⡏⠀⠸⡇⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⢶⣤⣄⡑⠄⠀⠀⠈⠑⠢⠙⠻⢷⣶⣵⣞⣑⣒⣋⣉⣁⣻⣿⠿⠟⠱⠃⡸⠀⣧⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⣷⣄⡀⠐⠢⣄⣀⡀⠀⠉⠉⠉⠉⠛⠙⠭⠭⠄⠒⠈⠀⠐⠁⢀⣿⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⢦⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣒⡠⠄⣠⡾⠃⠀⠀⠀⠀⠀⠀\n",
-    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠷⠶⣦⣤⣭⣤⣬⣭⣭⣴⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀\n"
-    )
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠶⠶⣶⠶⠶⠶⠶⠶⠶⠶⠶⠶⢶⠶⠶⠶⠤⠤⠤⠤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠊⠀⠀⠀⠀⠀⠀⠀⠀⠒⠒⠒⠀⠀⠀⠀⠤⢤⣤⣄⠉⠉⠛⠛⠷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⣰⠟⠀⠀⠀⠀⠀⠐⠋⢑⣤⣶⣶⣤⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣄⡂⠀⠀⠶⢄⠙⢷⣤⠀⠀⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⣸⡿⠚⠉⡀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⢢⠀⠀⡀⣰⣿⣿⣿⣿⣦⡀⠀⠀⠡⡀⢹⡆⠀⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⢀⣴⠏⠀⣀⣀⣀⡤⢤⣄⣠⣿⣿⣿⣿⣻⣿⣿⣷⠀⢋⣾⠈⠙⣶⠒⢿⣿⣿⣿⣿⡿⠟⠃⠀⡀⠡⠼⣧⡀⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⢀⣴⣿⢃⡴⢊⢽⣶⣤⣀⠀⠊⠉⠉⡛⢿⣿⣿⣿⠿⠋⢀⡀⠁⠀⠀⢸⣁⣀⣉⣉⣉⡉⠀⠩⡡⠀⣩⣦⠀⠈⠻⣦⡀⠀⠀⠀⠀\n",
+          "⠀⢠⡟⢡⠇⡞⢀⠆⠀⢻⣿⣿⣷⣄⠀⢀⠈⠂⠈⢁⡤⠚⡟⠉⠀⣀⣀⠀⠈⠳⣍⠓⢆⢀⡠⢀⣨⣴⣿⣿⡏⢀⡆⠀⢸⡇⠀⠀⠀⠀\n",
+          "⠀⣾⠁⢸⠀⠀⢸⠀⠀⠀⠹⣿⣿⣿⣿⣶⣬⣦⣤⡈⠀⠀⠇⠀⠛⠉⣩⣤⣤⣤⣿⣤⣤⣴⣾⣿⣿⣿⣿⣿⣧⠞⠀⠀⢸⡇⠀⠀⠀⠀\n",
+          "⠀⢹⣆⠸⠀⠀⢸⠀⠀⠀⠀⠘⢿⣿⣿⣿⣿⣿⣿⣟⣛⠛⠛⣛⡛⠛⠛⣛⣋⡉⠉⣡⠶⢾⣿⣿⣿⣿⣿⣿⡇⠀⠀⢀⣾⠃⠀⠀⠀⠀\n",
+          "⠀⠀⠻⣆⡀⠀⠈⢂⠀⠀⠀⠠⡈⢻⣿⣿⣿⣿⡟⠁⠈⢧⡼⠉⠙⣆⡞⠁⠈⢹⣴⠃⠀⢸⣿⣿⣿⣿⣿⣿⠃⠀⡆⣾⠃⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠈⢻⣇⠀⠀⠀⠀⠀⠀⢡⠀⠹⣿⣿⣿⣷⡀⠀⣸⡇⠀⠀⣿⠁⠀⠀⠘⣿⠀⠀⠘⣿⣿⣿⣿⣿⣿⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠹⣇⠀⠠⠀⠀⠀⠀⠡⠐⢬⡻⣿⣿⣿⣿⣿⣷⣶⣶⣿⣦⣤⣤⣤⣿⣦⣶⣿⣿⣿⣿⣿⣿⣿⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠹⣧⡀⠡⡀⠀⠀⠀⠑⠄⠙⢎⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⢿⡇⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠈⠳⣤⡐⡄⠀⠀⠀⠈⠂⠀⠱⣌⠻⣿⣿⣿⣿⣿⣿⣿⠿⣿⠟⢻⡏⢻⣿⣿⣿⣿⣿⣿⣿⠀⢸⡇⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢮⣦⡀⠂⠀⢀⠀⠀⠈⠳⣈⠻⣿⣿⣿⡇⠘⡄⢸⠀⠀⣇⠀⣻⣿⣿⣿⣿⣿⡏⠀⠸⡇⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⢶⣤⣄⡑⠄⠀⠀⠈⠑⠢⠙⠻⢷⣶⣵⣞⣑⣒⣋⣉⣁⣻⣿⠿⠟⠱⠃⡸⠀⣧⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⣷⣄⡀⠐⠢⣄⣀⡀⠀⠉⠉⠉⠉⠛⠙⠭⠭⠄⠒⠈⠀⠐⠁⢀⣿⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⢦⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣒⡠⠄⣠⡾⠃⠀⠀⠀⠀⠀⠀\n",
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠷⠶⣦⣤⣭⣤⣬⣭⣭⣴⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀\n"
+          )
     print("Trolled.")
     menu()
+
 
 menu()
 # This is the start of the program actually, to start the function it needs to be initialized before calling... stupid python.
