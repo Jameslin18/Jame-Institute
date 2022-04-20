@@ -69,10 +69,11 @@ def menu():
 def raw_input():
     inp = input("\nInput: ")
     try:
-        inp = int(input)
+        val = int(input)
+        return val
     except ValueError:
-        return str(inp)
-    
+        return inp
+
 
 
 def esc_startup():
