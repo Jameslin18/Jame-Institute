@@ -89,7 +89,6 @@ def manual_drive():  # You will use this function to program your ESC if require
     print("Enter 'menu' to return.")
 
     while True:
-        inp = raw_input()
         throttle = raw_input()
 
         if int(throttle) > max_value:
@@ -104,7 +103,7 @@ def manual_drive():  # You will use this function to program your ESC if require
             pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
             pi.set_servo_pulsewidth(motor_1, 1100)
 
-        elif str(inp) == "menu":
+        elif str(throttle) == "menu":
             menu()
             break
 
@@ -243,9 +242,15 @@ def cont_servo():
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            pi.set_PWM_frequency(motor_1, servo_freq)
-            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo_1, max_servo)
+            pi.set_mode(servo_1, pigpio.OUTPUT)
+
+            pi.set_PWM_frequency(servo_1, 50)
+            pi.set_PWM_range(servo_1, 20000)  # 1,000,000 / 50 = 20,000us for 100% duty cycle
+
+            pi.hardware_PWM(servo_1, 50, 2000)
+            time.sleep(1)
+
+            pi.set_servo_pulsewidth(servo_1, 100)
 
         elif servo_inp == "right":
             pi.set_PWM_frequency(motor_1, servo_freq)
@@ -256,11 +261,6 @@ def cont_servo():
             pi.set_PWM_frequency(motor_1, servo_freq)
             pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
             pi.set_servo_pulsewidth(servo_1, 1500)
-
-        elif servo_inp == "off":
-            pi.set_PWM_frequency(motor_1, servo_freq)
-            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo_1, 0)
 
         elif servo_inp == "menu":
             menu()
