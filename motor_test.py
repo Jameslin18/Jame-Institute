@@ -243,23 +243,23 @@ def cont_servo():
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            #pi.set_PWM_frequency(motor_1, servo_freq)
-            #pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_PWM_frequency(motor_1, servo_freq)
+            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
             pi.set_servo_pulsewidth(servo_1, max_servo)
 
         elif servo_inp == "right":
-            # pi.set_PWM_frequency(motor_1, servo_freq)
-            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_PWM_frequency(motor_1, servo_freq)
+            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
             pi.set_servo_pulsewidth(servo_1, min_servo)
 
         elif servo_inp == "stop":
-            # pi.set_PWM_frequency(motor_1, servo_freq)
-            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_PWM_frequency(motor_1, servo_freq)
+            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
             pi.set_servo_pulsewidth(servo_1, 1500)
 
         elif servo_inp == "off":
-            # pi.set_PWM_frequency(motor_1, servo_freq)
-            # pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
+            pi.set_PWM_frequency(motor_1, servo_freq)
+            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
             pi.set_servo_pulsewidth(servo_1, 0)
 
         elif servo_inp == "menu":
