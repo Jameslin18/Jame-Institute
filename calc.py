@@ -82,26 +82,26 @@ def angle_calc():
         wheel = WheelAngular()
 
         class LeftAngular:
-            i = wheel.left * math.cos(math.pi / 6)  # left.i * sqrt3/2
-            j = wheel.left * math.sin(math.pi / 6)  # left.j * 1/2
+            i = wheel.left * math.cos(5 * math.pi / 6)  # left.i * sqrt3/2
+            j = wheel.left * math.sin(5 * math.pi / 6)  # left.j * 1/2
 
         l_vector = LeftAngular()
 
         class RightAngular:
-            i = wheel.right * math.cos(11 * math.pi / 6)  # right.i * sqrt3/2
-            j = wheel.right * math.sin(11 * math.pi / 6)  # right.i * -1/2
+            i = wheel.right * math.cos(7 * math.pi / 6)  # right.i * sqrt3/2
+            j = wheel.right * math.sin(7 * math.pi / 6)  # right.i * -1/2
 
         r_vector = RightAngular()
 
         class MidAngular:
-            i = wheel.mid * math.cos(math.pi)  # mid.i * -1
-            j = wheel.mid * math.sin(math.pi)  # mid.i * 0
+            i = wheel.mid * math.cos(0)  # mid.i * 1
+            j = wheel.mid * math.sin(0)  # mid.i * 0
 
         m_vector = MidAngular()
 
         class NetAngular:
-            i = l_vector.i + r_vector.i + m_vector.i  # (left.i * sqrt3/2) + 
-            j = l_vector.j + r_vector.j + m_vector.j
+            i = int(l_vector.i + r_vector.i + m_vector.i)  # (left.i * sqrt3/2) + (right.i * sqrt3/2) - mid.i
+            j = int(l_vector.j + r_vector.j + m_vector.j)  # (left.j * 1/2) - (right.i * 1/2) + 0
 
         n_vector = NetAngular()
 
@@ -114,6 +114,7 @@ def angle_calc():
                 print("\nAngle = ", deg, "degrees")
             print("i = ", n_vector.i)
             print("j = ", n_vector.j)
+            print(m_vector.i, l_vector.i, r_vector.i)
             print("\n")
 
         except ZeroDivisionError:
