@@ -43,26 +43,26 @@ def angle_calc():
         wheel = WheelAngular()
 
         class LeftAngular:
-            i = wheel.left * math.sin(5 * math.pi / 6)
-            j = wheel.left * math.cos(5 * math.pi / 6)
+            i = wheel.left * math.cos(math.pi / 6)
+            j = wheel.left * math.sin(math.pi / 6)
 
         l_vector = LeftAngular()
 
         class RightAngular:
-            i = wheel.right * math.sin(math.pi / 6)
-            j = wheel.right * math.cos(math.pi / 6)
+            i = wheel.right * math.cos(11 * math.pi / 6)
+            j = wheel.right * math.sin(11 * math.pi / 6)
 
         r_vector = RightAngular()
 
         class MidAngular:
-            i = 0
-            j = wheel.mid
+            i = wheel.mid * math.cos(0)
+            j = wheel.mid * math.sin(0)
 
         m_vector = MidAngular()
 
         class NetAngular:
-            i = abs(l_vector.i) - abs(r_vector.i)
-            j = abs(l_vector.j) + abs(r_vector.j) - m_vector.j
+            i = l_vector.i + r_vector.i + m_vector.j
+            j = l_vector.j + r_vector.j
 
         n_vector = NetAngular()
 
