@@ -9,13 +9,30 @@ time.sleep(1)  # As i said it is too impatient and so if this delay is removed y
 print("For first time launch, select set \n")
 
 # Connect the ESC in this GPIO pin
-motor_1 = 17  # left
-motor_2 = 27  #
-motor_3 = 22  #
 
-servo_1 = 5  # continuous servo
-servo_2 = 6  #
-servo_3 = 13  #
+
+class MotorPin:
+    one = 17  # left
+    two = 27  #
+    three = 22  #
+
+
+class MotorThrottle:
+    one = 1100
+    two = 1100
+    three = 1100
+
+
+motor = MotorPin()
+
+
+class ServoPin:
+    one = 5  # continuous servo
+    two = 6  #
+    three = 13  #
+
+
+servo = ServoPin()
 
 # max and min REV smart servo pulsewidth
 min_servo = 500
@@ -29,7 +46,7 @@ servo_freq = 50
 
 pi = pigpio.pi()
 
-pi.set_servo_pulsewidth(motor_1, 0)
+pi.set_servo_pulsewidth(motor.one, 0)
 
 max_value = 2000  # change this if your ESC's max value is different or leave it be
 min_value = 1000  # change this if your ESC's min value is different or leave it be
@@ -66,14 +83,14 @@ def raw_input():
 
 
 def esc_startup():
-    pi.set_servo_pulsewidth(motor_1, min_value)
+    pi.set_servo_pulsewidth(motor.one, min_value)
     menu()
 
 
 def send():
-    pi.set_PWM_frequency(motor_1, motor_freq)
-    pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-    pi.set_servo_pulsewidth(motor_1, 1100)
+    pi.set_PWM_frequency(motor.one, motor_freq)
+    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
+    pi.set_servo_pulsewidth(motor.one, 1100)
     menu()
 
 
@@ -89,23 +106,23 @@ def manual_drive():  # You will use this function to program your ESC if require
 
                 if throttle >= max_value:
                     print("Maximum throttle is ", max_value - 1, ".")
-                    pi.set_PWM_frequency(motor_1, motor_freq)
-                    pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor_1, max_value)
+                    pi.set_PWM_frequency(motor.one, motor_freq)
+                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
+                    pi.set_servo_pulsewidth(motor.one, max_value)
 
                 elif 0 < throttle < 1100:
                     print("Minimum throttle is 1100.")
-                    pi.set_PWM_frequency(motor_1, motor_freq)
-                    pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor_1, 1100)
+                    pi.set_PWM_frequency(motor.one, motor_freq)
+                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
+                    pi.set_servo_pulsewidth(motor.one, 1100)
 
                 elif throttle == 0:
-                    pi.set_servo_pulsewidth(motor_1, min_value)
+                    pi.set_servo_pulsewidth(motor.one, min_value)
 
                 else:
-                    pi.set_PWM_frequency(motor_1, motor_freq)
-                    pi.set_PWM_dutycycle(motor_1, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor_1, throttle)
+                    pi.set_PWM_frequency(motor.one, motor_freq)
+                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
+                    pi.set_servo_pulsewidth(motor.one, throttle)
         except ValueError:
             if str_inp == "menu":
                 menu()
@@ -115,36 +132,36 @@ def manual_drive():  # You will use this function to program your ESC if require
 
 
 def esc_settings():
-    pi.set_servo_pulsewidth(motor_1, 0)
+    pi.set_servo_pulsewidth(motor.one, 0)
     print("You have selected esc setting.")
     print("Disconnect battery and press Enter.")
     inp = raw_input()
     if inp == '':
-        pi.set_servo_pulsewidth(motor_1, max_value)
+        pi.set_servo_pulsewidth(motor.one, max_value)
         time.sleep(1)
         print("Connect the battery now, press Enter at the intended sequence.")
         raw_input()
     else:
         print("bruh.")
-        pi.set_servo_pulsewidth(motor_1, 0)
+        pi.set_servo_pulsewidth(motor.one, 0)
         menu()
 
         if inp == '':
-            pi.set_servo_pulsewidth(motor_1, min_value)
+            pi.set_servo_pulsewidth(motor.one, min_value)
             print("Press Enter again when different sequence runs again.")
             raw_input()
         else:
             print("bruh.")
-            pi.set_servo_pulsewidth(motor_1, 0)
+            pi.set_servo_pulsewidth(motor.one, 0)
             menu()
 
             if inp == '':
-                pi.set_servo_pulsewidth(motor_1, min_value)
+                pi.set_servo_pulsewidth(motor.one, min_value)
                 print("There should be two beeps as confirmation.")
                 print("After this the ESC is set and you can disconnect battery.")
             else:
                 print("bruh.")
-                pi.set_servo_pulsewidth(motor_1, 0)
+                pi.set_servo_pulsewidth(motor.one, 0)
                 menu()
 
 
@@ -154,25 +171,25 @@ def cont_servo():
     print("\n[left] [right] [stop] [off]")
 
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(servo_1, GPIO.OUT)
+    GPIO.setup(servo.one, GPIO.OUT)
 
     while True:
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            pi.set_PWM_frequency(motor_1, servo_freq)
-            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo_1, max_servo)
+            pi.set_PWM_frequency(motor.one, servo_freq)
+            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo.one, max_servo)
 
         elif servo_inp == "right":
-            pi.set_PWM_frequency(motor_1, servo_freq)
-            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo_1, min_servo)
+            pi.set_PWM_frequency(motor.one, servo_freq)
+            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo.one, min_servo)
 
         elif servo_inp == "stop":
-            pi.set_PWM_frequency(motor_1, servo_freq)
-            pi.set_PWM_dutycycle(motor_1, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo_1, 1500)
+            pi.set_PWM_frequency(motor.one, servo_freq)
+            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
+            pi.set_servo_pulsewidth(servo.one, 1500)
 
         elif servo_inp == "menu":
             menu()
@@ -183,7 +200,7 @@ def cont_servo():
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
-    pi.set_servo_pulsewidth(motor_1, 0)
+    pi.set_servo_pulsewidth(motor.one, 0)
     pi.stop()
 
 
