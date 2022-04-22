@@ -1,6 +1,25 @@
 import math
 
 
+def menu():
+    print("--------------------------------")
+    print("| ang | power | base |")
+    print("--------------------------------\n")
+    while True:
+        inp = raw_input()
+        if inp == "ang":
+            angle_calc()
+            break
+        elif inp == "power":
+            power_set()
+            break
+        elif inp == "base":
+            choose_base_wheel()
+            break
+        else:
+            print("cringe.")
+
+
 def raw_input():
     inp = input("Input: ")
     return inp
@@ -38,24 +57,45 @@ def power_set():
 
 
 def choose_base_wheel():
-    theta = angle_inp()
-    if 0 < float(theta) < 2 * math.pi / 3:
-        base = "left"
-        return base
-    elif 4 * math.pi / 3 < float(theta) < 2 * math.pi:
-        base = "right"
-        return base
-    elif 2 * math.pi / 3 < float(theta) < 4 * math.pi / 3:
-        base = "mid"
-        return base
-    elif float(theta) == 0:
-        base = "left+right"
-        return base
-    elif float(theta) == 2 * math.pi / 3:
-        base = "left+mid"
-        return base
+    while True:
+        theta = angle_inp()
+
+        if 0 < float(theta) < 2 * math.pi / 3:
+            base = "left"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif 4 * math.pi / 3 < float(theta) < 2 * math.pi:
+            base = "right"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif 2 * math.pi / 3 < float(theta) < 4 * math.pi / 3:
+            base = "mid"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif float(theta) == 0 and 2 * math.pi:
+            base = "left+right"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif float(theta) == 2 * math.pi / 3:
+            base = "left+mid"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif float(theta) == 4 * math.pi / 3:
+            base = "right+mid"
+            print("Base wheel(s) = ", base)
+            menu()
+            return base
+        elif float(theta) > 2 * math.pi:
+            print("Cannot go over 360 degrees.")
+
 
 # power_set()
+
 
 w = 60
 
@@ -148,11 +188,15 @@ def angle_calc():
         print("------------------")
         print("\n")
 
-        print("[stop] or any input.")
+        print("[stop] [menu] Enter")
         inp = raw_input()
         if inp == "stop":
             break
+        elif inp == "menu":
+            menu()
+            break
+        elif inp == '':
+            angle_calc()
 
 
-angle_calc()
-
+menu()
