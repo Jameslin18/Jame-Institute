@@ -50,52 +50,50 @@ def get_pulse():
     p = int(v / float(2000 / 9))
     return p
 
+def pulse_angular():
+    pulse = int(raw_input())
+    volt = float(float(9 / 2000) * pulse)
+    wh_angular = float(volt * 60 * math.pi)
+    ball_angular = wh_angular * float(101.6 / 40)
+    return ball_angular
+
 
 def angle_calc():
     while True:
-        class WheelAngular(object):
+        class BallAngular(object):
             def __init__(self):
                 while True:
                     try:
                         print("Give left wheel pulsewidth.")
-                        pulse_l = int(raw_input())
-                        volt_l = float(float(9 / 2000) * pulse_l)
-                        wh_angular_l = float(volt_l * 60 * math.pi)
-                        self.left = wh_angular_l * float(101.6/40)
+                        self.left = pulse_angular()
 
                         print("Give right wheel pulsewidth.")
-                        pulse_r = int(raw_input())
-                        volt_r = float(float(9 / 2000) * pulse_r)
-                        wh_angular_r = float(volt_r * 60 * math.pi)
-                        self.right = wh_angular_r * float(101.6 / 40)
+                        self.right = pulse_angular()
 
                         print("Give mid wheel pulsewidth.")
-                        pulse_m = int(raw_input())
-                        volt_m = float(float(9 / 2000) * pulse_m)
-                        wh_angular_m = float(volt_m * 60 * math.pi)
-                        self.mid = wh_angular_m * float(101.6 / 40)
+                        self.mid = pulse_angular()
 
                         break
                     except ValueError:
                         print("cringe.")
 
-        wheel = WheelAngular()
+        ball = BallAngular()
 
         class LeftAngular:
-            i = wheel.left * math.cos(5 * math.pi / 6)  # left.i * sqrt3/2
-            j = wheel.left * math.sin(5 * math.pi / 6)  # left.j * 1/2
+            i = ball.left * math.sin(math.pi / 6)  # left.i * sqrt3/2
+            j = ball.left * math.cos(math.pi / 6)  # left.j * 1/2
 
         l_vector = LeftAngular()
 
         class RightAngular:
-            i = wheel.right * math.cos(7 * math.pi / 6)  # right.i * sqrt3/2
-            j = wheel.right * math.sin(7 * math.pi / 6)  # right.i * -1/2
+            i = ball.right * math.sin(11 * math.pi / 6)  # right.i * sqrt3/2
+            j = ball.right * math.cos(11 * math.pi / 6)  # right.i * -1/2
 
         r_vector = RightAngular()
 
         class MidAngular:
-            i = wheel.mid * math.cos(0)  # mid.i * 1
-            j = wheel.mid * math.sin(0)  # mid.i * 0
+            i = ball.mid * math.cos(math.pi)  # mid.i * -1
+            j = ball.mid * math.sin(0)  # mid.i * 0
 
         m_vector = MidAngular()
 
@@ -112,15 +110,28 @@ def angle_calc():
                 print("\nAngle = ", 360 + deg, "degrees")
             else:
                 print("\nAngle = ", deg, "degrees")
-            print("i = ", n_vector.i)
-            print("j = ", n_vector.j)
-            print(m_vector.i, l_vector.i, r_vector.i)
+            print("\n------------------")
+            print("i net = ", n_vector.i)
+            print("j net = ", n_vector.j)
+            print("------------------")
+            print("i left = ", l_vector.i)
+            print("i right = ", r_vector.i)
+            print("i mid = ", m_vector.i)
+            print("------------------")
+            print("j left = ", l_vector.j)
+            print("j right = ", r_vector.j)
+            print("j mid = ", m_vector.j)
+            print("------------------")
+            print("ball left = ", ball.left)
+            print("ball right = ", ball.right)
+            print("ball mid = ", ball.mid)
+            print("------------------")
             print("\n")
 
         except ZeroDivisionError:
             print("no spin\n")
 
-        print("\n[stop] or any input.")
+        print("[stop] or any input.")
         inp = raw_input()
 
         if inp == "stop":
