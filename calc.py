@@ -1,9 +1,10 @@
 import math
+from sympy import Eq, symbols, solve, Symbol, postorder_traversal
 
 
 def menu():
     print("--------------------------------")
-    print("| ang | power | base |")
+    print("| ang | power | base | pulse |")
     print("--------------------------------\n")
     while True:
         inp = raw_input()
@@ -15,6 +16,9 @@ def menu():
             break
         elif inp == "base":
             choose_base_wheel()
+            break
+        elif inp == "pulse":
+            calc_pulse()
             break
         else:
             print("cringe.")
@@ -56,61 +60,183 @@ def power_set():
     return wheel_throttle
 
 
-def choose_base_wheel():
-    while True:
-        theta = angle_inp()
+def spin_power_set():
+    wn = 2000
+    return wn
 
+
+def choose_base_wheel():
+    theta = angle_inp()
+    while True:
         if 0 < float(theta) < 2 * math.pi / 3:
             base = "left"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif 4 * math.pi / 3 < float(theta) < 2 * math.pi:
             base = "right"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif 2 * math.pi / 3 < float(theta) < 4 * math.pi / 3:
             base = "mid"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif float(theta) == 0 and 2 * math.pi:
             base = "left+right"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif float(theta) == 2 * math.pi / 3:
             base = "left+mid"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif float(theta) == 4 * math.pi / 3:
             base = "right+mid"
             print("Base wheel(s) = ", base)
-            menu()
-            return base
+            return theta, base
         elif float(theta) > 2 * math.pi:
             print("Cannot go over 360 degrees.")
 
 
-# def give_three
+def calc_pulse():
+    theta, base = choose_base_wheel()
+    if theta == math.pi/2 or 3*math.pi/2:
+        k = float(math.tan(theta+0.01))
+    else:
+        k = float(math.tan(theta))
+    wn = spin_power_set()
 
+    if base == "left":
+        wl = pulse_angular()
+        wr, wm = symbols('wr wm', positive=True)
 
-# power_set()
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
 
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
 
-w = 60
+        left = wl
+        right = sol[0][wr]
+        middle = sol[0][wm]
 
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
 
-def get_pulse():
-    v = float(w / 60 / math.pi)
-    p = int(v / float(2000 / 9))
-    return p
+        menu()
+        return left, right, middle
+
+    elif base == "right":
+        wr = power_set()
+        wl, wm = symbols('wr wm', positive=True)
+
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
+
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
+        right = wr
+        left = sol[0][wl]
+        middle = sol[0][wm]
+
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
+
+        menu()
+        return left, right, middle
+
+    elif base == "mid":
+        wm = power_set()
+        wr, wl = symbols('wr wl', positive=True)
+
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
+
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
+
+        middle = wm
+        right = sol[0][wr]
+        left = sol[0][wl]
+
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
+
+        menu()
+        return left, right, middle
+
+    elif base == "left+right":
+        wl = wr = power_set()
+        wm = Symbol('wm', positive=True)
+
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
+
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
+
+        right = left = wl
+        middle = sol[0][wm]
+
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
+
+        menu()
+        return left, right, middle
+
+    elif base == "left+mid":
+        wl = wm = power_set()
+        wr = Symbol('wr', positive=True)
+
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
+
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
+
+        middle = left = wl
+        right = sol[0][wr]
+
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
+
+        menu()
+        return left, right, middle
+
+    elif base == "right+mid":
+        wr = wm = power_set()
+        wl = Symbol('wl', positive=True)
+
+        eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
+        eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
+
+        sol = solve([eq1, eq2], dict=True)
+        print(sol)
+
+        right = middle = wr
+        left = sol[0][wl]
+
+        print("left = ", left)
+        print("right = ", right)
+        print("middle = ", middle)
+
+        menu()
+        return left, right, middle
 
 
 def pulse_angular():
-    pulse = int(raw_input())
+    pulse = int(power_set())
+    volt = float(float(9 / 2000) * pulse)
+    wh_angular = float(volt * 60 * math.pi)
+    # ball_angular = wh_angular * float(101.6 / 40)
+    return wh_angular
+
+
+def pulse_angular_inp():
+    pulse = float(raw_input())
     volt = float(float(9 / 2000) * pulse)
     wh_angular = float(volt * 60 * math.pi)
     # ball_angular = wh_angular * float(101.6 / 40)
@@ -124,13 +250,13 @@ def angle_calc():
                 while True:
                     try:
                         print("Give left wheel pulsewidth.")
-                        self.left = pulse_angular()
+                        self.left = pulse_angular_inp()
 
                         print("Give right wheel pulsewidth.")
-                        self.right = pulse_angular()
+                        self.right = pulse_angular_inp()
 
                         print("Give mid wheel pulsewidth.")
-                        self.mid = pulse_angular()
+                        self.mid = pulse_angular_inp()
 
                         break
                     except ValueError:
