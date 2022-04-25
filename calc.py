@@ -1,5 +1,5 @@
 import math
-from sympy import Eq, symbols, solve, Symbol, postorder_traversal
+from sympy import Eq, symbols, solve, Symbol
 
 
 def menu():
@@ -105,13 +105,17 @@ def calc_pulse():
     wn = spin_power_set()
 
     if base == "left":
-        wl = pulse_angular()
+        wl = pulse_angular_p()
         wr, wm = symbols('wr wm', positive=True)
-
+        print(k)
+        print(wl)
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
         eq2 = Eq((wr + wl) ** 2 + wm * wm - wr * wm - wl * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+        print(eq1)
+        print(eq2)
+
+        sol = solve([eq1, eq2], [wr, wm], dict=True)
         print(sol)
 
         left = wl
@@ -126,7 +130,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "right":
-        wr = power_set()
+        wr = pulse_angular_p()
         wl, wm = symbols('wr wm', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -146,7 +150,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "mid":
-        wm = power_set()
+        wm = pulse_angular_p()
         wr, wl = symbols('wr wl', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -167,7 +171,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "left+right":
-        wl = wr = power_set()
+        wl = wr = pulse_angular_p()
         wm = Symbol('wm', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -187,7 +191,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "left+mid":
-        wl = wm = power_set()
+        wl = wm = pulse_angular_p()
         wr = Symbol('wr', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -207,7 +211,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "right+mid":
-        wr = wm = power_set()
+        wr = wm = pulse_angular_p()
         wl = Symbol('wl', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -227,7 +231,7 @@ def calc_pulse():
         return left, right, middle
 
 
-def pulse_angular():
+def pulse_angular_p():
     pulse = int(power_set())
     volt = float(float(9 / 2000) * pulse)
     wh_angular = float(volt * 60 * math.pi)
@@ -235,7 +239,7 @@ def pulse_angular():
     return wh_angular
 
 
-def pulse_angular_inp():
+def pulse_angular_i():
     pulse = float(raw_input())
     volt = float(float(9 / 2000) * pulse)
     wh_angular = float(volt * 60 * math.pi)
@@ -250,13 +254,13 @@ def angle_calc():
                 while True:
                     try:
                         print("Give left wheel pulsewidth.")
-                        self.left = pulse_angular_inp()
+                        self.left = pulse_angular_i()
 
                         print("Give right wheel pulsewidth.")
-                        self.right = pulse_angular_inp()
+                        self.right = pulse_angular_i()
 
                         print("Give mid wheel pulsewidth.")
-                        self.mid = pulse_angular_inp()
+                        self.mid = pulse_angular_i()
 
                         break
                     except ValueError:
