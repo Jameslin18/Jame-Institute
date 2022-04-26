@@ -1,55 +1,52 @@
 import pigpio  # importing GPIO library
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import os  # importing os library so as to communicate with the system
 import time  # importing time library to make Rpi wait because its too impatient
 
 os.system("sudo pigpiod")  # Launching GPIO library
 time.sleep(1)  # As i said it is too impatient and so if this delay is removed you will get an error
 
-print("For first time launch, select set \n")
 
-# Connect the ESC in this GPIO pin
+class MotorInfo:
+    p1 = 17  # right
+    p2 = 27  # left
+    p3 = 22  # mid
 
+    max = 2000  # change this if your ESC's max value is different or leave it be
+    min = 1000  # change this if your ESC's min value is different or leave it be
 
-class MotorPin:
-    one = 17  # left
-    two = 27  #
-    three = 22  #
+    t1 = 1100
+    t2 = 1100
+    t3 = 1100
 
-
-class MotorThrottle:
-    one = 1100
-    two = 1100
-    three = 1100
-
-
-motor = MotorPin()
+    f = 16000
+    d = 255
 
 
-class ServoPin:
-    one = 5  # continuous servo
-    two = 6  #
-    three = 13  #
+motor = MotorInfo()
 
 
-servo = ServoPin()
+class ServoInfo:
+    p1 = 5  # continuous servo
+    p2 = 6  #
+    p3 = 13  #
 
-# max and min REV smart servo pulsewidth
-min_servo = 500
-max_servo = 2500
+    cmin = 500  # maxREV smart servo pulsewidth
+    cmax = 2500  # min REV smart servo pulsewidth
 
-motor_duty_cycle = 255
-motor_freq = 16000
+    f = 50
+    d = 255
 
-servo_duty_cycle = 255
-servo_freq = 50
+
+servo = ServoInfo()
 
 pi = pigpio.pi()
 
-pi.set_servo_pulsewidth(motor.one, 0)
+pi.set_servo_pulsewidth(motor.p1, 0)
+pi.set_servo_pulsewidth(motor.p2, 0)
+pi.set_servo_pulsewidth(motor.p3, 0)
 
-max_value = 2000  # change this if your ESC's max value is different or leave it be
-min_value = 1000  # change this if your ESC's min value is different or leave it be
+print("For first time launch, select set. \n")
 
 
 def menu():
@@ -63,7 +60,7 @@ def menu():
     elif inp == "start":
         esc_startup()
     elif inp == "man":
-        manual_drive()
+        choose_single_mult()
     elif inp == "cs":
         cont_servo()
     elif inp == "send":
@@ -72,6 +69,8 @@ def menu():
         stop()
     elif inp == "troll":
         troll()
+    elif inp == "psychosis":
+        deep_state()
     else:
         print("cringe.")
         menu()
@@ -83,20 +82,94 @@ def raw_input():
 
 
 def esc_startup():
-    pi.set_servo_pulsewidth(motor.one, min_value)
+    pi.set_servo_pulsewidth(motor.p1, motor.min)
     menu()
 
 
-def send():
-    pi.set_PWM_frequency(motor.one, motor_freq)
-    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
-    pi.set_servo_pulsewidth(motor.one, 1100)
+def set_motor_pulse(wheel, throttle):
+    pi.set_PWM_frequency(wheel, motor.f)
+    pi.set_PWM_dutycycle(wheel, motor.d)
+    pi.set_servo_pulsewidth(wheel, throttle)
+
+
+def set_servo_pulse(serv, pulse):
+    pi.set_PWM_frequency(serv, servo.f)
+    pi.set_PWM_dutycycle(serv, servo.d)
+    pi.set_servo_pulsewidth(serv, pulse)
+
+
+def send(right, left, mid):
+    set_motor_pulse(motor.p1, right)
+    set_motor_pulse(motor.p2, left)
+    set_motor_pulse(motor.p3, mid)
     menu()
+
+
+def choose_wheel(func):
+    while True:
+        inp = raw_input()
+        print("Choose which wheel for ", func, ".")
+        print("[left] [right] [middle]")
+
+        if inp == "right":
+            wheel = motor.p1
+            print("The right wheel is selected.")
+            return wheel
+        elif inp == "left":
+            wheel = motor.p2
+            print("The left wheel is selected.")
+            return wheel
+        elif inp == "middle":
+            wheel = motor.p3
+            print("The middle wheel is selected.")
+            return wheel
+        elif inp == "menu":
+            menu()
+            break
+        else:
+            print("cringe.")
+
+
+def esc_settings():
+    pin = choose_wheel("ESC setting")
+
+    pi.set_servo_pulsewidth(pin, 0)
+    print("You have selected esc setting.")
+    print("Disconnect battery and press Enter.")
+    inp = raw_input()
+    if inp == '':
+        pi.set_servo_pulsewidth(pin, motor.max)
+        time.sleep(1)
+        print("Connect the battery now, press Enter at the intended sequence.")
+        raw_input()
+    else:
+        print("bruh.")
+        pi.set_servo_pulsewidth(pin, 0)
+        menu()
+
+        if inp == '':
+            pi.set_servo_pulsewidth(pin, motor.min)
+            print("Press Enter again when different sequence runs again.")
+            raw_input()
+        else:
+            print("bruh.")
+            pi.set_servo_pulsewidth(pin, 0)
+            menu()
+
+            if inp == '':
+                pi.set_servo_pulsewidth(pin, motor.min)
+                print("There should be two beeps as confirmation.")
+                print("After this the ESC is set and you can disconnect battery.")
+            else:
+                print("bruh.")
+                pi.set_servo_pulsewidth(pin, 0)
+                menu()
 
 
 def manual_drive():  # You will use this function to program your ESC if required
-    print("\nYou have selected manual option, enter number to set throttle.")
-    print("Enter 'menu' to return.")
+    print("\nYou have selected single manual option, enter number to set throttle.")
+    print("Enter 'menu' to return.\n")
+    pin = choose_wheel("manual control")
 
     while True:
         try:
@@ -104,25 +177,18 @@ def manual_drive():  # You will use this function to program your ESC if require
                 str_inp = raw_input()
                 throttle = int(str_inp)
 
-                if throttle >= max_value:
-                    print("Maximum throttle is ", max_value - 1, ".")
-                    pi.set_PWM_frequency(motor.one, motor_freq)
-                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor.one, max_value)
-
+                if throttle >= motor.max:
+                    print("Maximum throttle is ", motor.max - 1, ".")
+                    set_motor_pulse(pin, motor.max)
                 elif 0 < throttle < 1100:
                     print("Minimum throttle is 1100.")
-                    pi.set_PWM_frequency(motor.one, motor_freq)
-                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor.one, 1100)
+                    set_motor_pulse(pin, 1100)
 
                 elif throttle == 0:
-                    pi.set_servo_pulsewidth(motor.one, min_value)
+                    pi.set_servo_pulsewidth(pin, motor.min)
 
                 else:
-                    pi.set_PWM_frequency(motor.one, motor_freq)
-                    pi.set_PWM_dutycycle(motor.one, motor_duty_cycle)
-                    pi.set_servo_pulsewidth(motor.one, throttle)
+                    set_motor_pulse(pin, throttle)
         except ValueError:
             if str_inp == "menu":
                 menu()
@@ -131,38 +197,82 @@ def manual_drive():  # You will use this function to program your ESC if require
                 print("cringe.")
 
 
-def esc_settings():
-    pi.set_servo_pulsewidth(motor.one, 0)
-    print("You have selected esc setting.")
-    print("Disconnect battery and press Enter.")
-    inp = raw_input()
-    if inp == '':
-        pi.set_servo_pulsewidth(motor.one, max_value)
-        time.sleep(1)
-        print("Connect the battery now, press Enter at the intended sequence.")
-        raw_input()
-    else:
-        print("bruh.")
-        pi.set_servo_pulsewidth(motor.one, 0)
-        menu()
+def manual_drive_mult():
+    print("\nYou have selected multiple manual option, enter numbers to set throttle.")
+    print("Enter 'menu' to return.\n")
 
-        if inp == '':
-            pi.set_servo_pulsewidth(motor.one, min_value)
-            print("Press Enter again when different sequence runs again.")
-            raw_input()
+    while True:
+        class WheelThrottles:
+            def __init__(self):
+                while True:
+                    try:
+                        inp = raw_input()
+                        int_inp = int(inp)
+
+                        print("Give left wheel throttle.")
+                        if int_inp >= motor.max:
+                            print("Maximum left throttle is ", motor.max - 1, ".")
+                            self.left = motor.max - 1
+                        elif 0 < int_inp < 1100:
+                            print("Minimum left throttle is 1100.")
+                            self.left = 1100
+                        elif int_inp == 0:
+                            self.left = motor.min
+                        else:
+                            self.left = int_inp
+
+                        print("Give right wheel throttle.")
+                        if int_inp >= motor.max:
+                            print("Maximum right throttle is ", motor.max - 1, ".")
+                            self.right = motor.max - 1
+                        elif 0 < int_inp < 1100:
+                            print("Minimum right throttle is 1100.")
+                            self.right = 1100
+                        elif int_inp == 0:
+                            self.right = motor.min
+                        else:
+                            self.right = int_inp
+
+                        print("Give middle wheel throttle.")
+                        if int_inp >= motor.max:
+                            print("Maximum middle throttle is ", motor.max - 1, ".")
+                            self.mid = motor.max - 1
+                        elif 0 < int_inp < 1100:
+                            print("Minimum left throttle is 1100.")
+                            self.mid = 1100
+                        elif int_inp == 0:
+                            self.mid = motor.min
+                        else:
+                            self.mid = int_inp
+                        break
+
+                    except ValueError:
+                        if int_inp == "menu":
+                            menu()
+                            break
+                        else:
+                            print("cringe.")
+
+        throttle = WheelThrottles()
+
+        set_motor_pulse(motor.p1, throttle.right)
+        set_motor_pulse(motor.p2, throttle.left)
+        set_motor_pulse(motor.p3, throttle.mid)
+
+
+def choose_single_mult():
+    while True:
+        inp = raw_input()
+        print("Choose single or multiple mode.")
+        print("[s] [m]")
+        if inp == "s":
+            manual_drive()
+            break
+        elif inp == "m":
+            manual_drive_mult()
+            break
         else:
-            print("bruh.")
-            pi.set_servo_pulsewidth(motor.one, 0)
-            menu()
-
-            if inp == '':
-                pi.set_servo_pulsewidth(motor.one, min_value)
-                print("There should be two beeps as confirmation.")
-                print("After this the ESC is set and you can disconnect battery.")
-            else:
-                print("bruh.")
-                pi.set_servo_pulsewidth(motor.one, 0)
-                menu()
+            print("cringe.")
 
 
 def cont_servo():
@@ -170,26 +280,17 @@ def cont_servo():
     print("Enter menu to return.")
     print("\n[left] [right] [stop] [off]")
 
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(servo.one, GPIO.OUT)
-
     while True:
         servo_inp = raw_input()
 
         if servo_inp == "left":
-            pi.set_PWM_frequency(motor.one, servo_freq)
-            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo.one, max_servo)
+            set_servo_pulse(servo.p1, servo.cmax)
 
         elif servo_inp == "right":
-            pi.set_PWM_frequency(motor.one, servo_freq)
-            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo.one, min_servo)
+            set_servo_pulse(servo.p1, servo.cmin)
 
         elif servo_inp == "stop":
-            pi.set_PWM_frequency(motor.one, servo_freq)
-            pi.set_PWM_dutycycle(motor.one, servo_duty_cycle)
-            pi.set_servo_pulsewidth(servo.one, 1500)
+            set_servo_pulse(servo.p1, 1500)
 
         elif servo_inp == "menu":
             menu()
@@ -200,7 +301,9 @@ def cont_servo():
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
-    pi.set_servo_pulsewidth(motor.one, 0)
+    pi.set_servo_pulsewidth(motor.p1, 0)
+    pi.set_servo_pulsewidth(motor.p2, 0)
+    pi.set_servo_pulsewidth(motor.p3, 0)
     pi.stop()
 
 
@@ -256,6 +359,12 @@ def troll():
           )
     print("\nTrolled.")
     menu()
+
+
+def deep_state():
+    while True:
+        print("KILL JOHN LENNON !\n")
+        time.sleep(1)
 
 
 menu()

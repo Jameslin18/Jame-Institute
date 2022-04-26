@@ -105,7 +105,7 @@ def calc_pulse():
     wn = spin_power_set()
 
     if base == "left":
-        wl = pulse_angular_p()
+        wl = pulse_angular(power_set())
         wr, wm = symbols('wr wm', positive=True)
         print(k)
         print(wl)
@@ -130,7 +130,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "right":
-        wr = pulse_angular_p()
+        wr = pulse_angular(power_set())
         wl, wm = symbols('wr wm', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -150,7 +150,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "mid":
-        wm = pulse_angular_p()
+        wm = pulse_angular(power_set())
         wr, wl = symbols('wr wl', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -171,7 +171,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "left+right":
-        wl = wr = pulse_angular_p()
+        wl = wr = pulse_angular(power_set())
         wm = Symbol('wm', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -191,7 +191,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "left+mid":
-        wl = wm = pulse_angular_p()
+        wl = wm = pulse_angular(power_set())
         wr = Symbol('wr', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -211,7 +211,7 @@ def calc_pulse():
         return left, right, middle
 
     elif base == "right+mid":
-        wr = wm = pulse_angular_p()
+        wr = wm = pulse_angular(power_set())
         wl = Symbol('wl', positive=True)
 
         eq1 = Eq(2 * k * wm + (math.sqrt(3) - k) * wr - (math.sqrt(3) + k) * wl, 0)
@@ -231,16 +231,8 @@ def calc_pulse():
         return left, right, middle
 
 
-def pulse_angular_p():
-    pulse = int(power_set())
-    volt = float(float(9 / 2000) * pulse)
-    wh_angular = float(volt * 60 * math.pi)
-    # ball_angular = wh_angular * float(101.6 / 40)
-    return wh_angular
-
-
-def pulse_angular_i():
-    pulse = float(raw_input())
+def pulse_angular(inp):
+    pulse = int(inp)
     volt = float(float(9 / 2000) * pulse)
     wh_angular = float(volt * 60 * math.pi)
     # ball_angular = wh_angular * float(101.6 / 40)
@@ -254,13 +246,13 @@ def angle_calc():
                 while True:
                     try:
                         print("Give left wheel pulsewidth.")
-                        self.left = pulse_angular_i()
+                        self.left = pulse_angular(raw_input())
 
                         print("Give right wheel pulsewidth.")
-                        self.right = pulse_angular_i()
+                        self.right = pulse_angular(raw_input())
 
                         print("Give mid wheel pulsewidth.")
-                        self.mid = pulse_angular_i()
+                        self.mid = pulse_angular(raw_input())
 
                         break
                     except ValueError:
