@@ -83,8 +83,8 @@ def raw_input():
 
 def esc_startup():
     pi.set_servo_pulsewidth(motor.p1, motor.min)
-    pi.set_servo_pulsewidth(motor.p1, motor.min)
-    pi.set_servo_pulsewidth(motor.p1, motor.min)
+    pi.set_servo_pulsewidth(motor.p2, motor.min)
+    pi.set_servo_pulsewidth(motor.p3, motor.min)
     menu()
 
 
