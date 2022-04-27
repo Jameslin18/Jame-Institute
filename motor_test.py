@@ -31,11 +31,8 @@ class ServoInfo:
     p2 = 6  #
     p3 = 13  #
 
-    cmin = 500  # maxREV smart servo pulsewidth
-    cmax = 2500  # min REV smart servo pulsewidth
-
-    f = 50
-    d = 255
+    cmin = 550  # maxREV smart servo pulsewidth
+    cmax = 2450  # min REV smart servo pulsewidth
 
 
 servo = ServoInfo()
@@ -95,8 +92,8 @@ def set_motor_pulse(wheel, throttle):
 
 
 def set_servo_pulse(serv, pulse):
-    pi.set_PWM_frequency(serv, servo.f)
-    pi.set_PWM_dutycycle(serv, servo.d)
+    # pi.set_PWM_frequency(serv, servo.f)
+    # pi.set_PWM_dutycycle(serv, servo.d)
     pi.set_servo_pulsewidth(serv, pulse)
 
 
@@ -250,7 +247,7 @@ def manual_drive_mult():
                         break
 
                     except ValueError:
-                        if int_inp1 or int_inp2 or int_inp3 == "menu":
+                        if self.right or self.left or self.mid == "menu":
                             menu()
                             break
                         else:
