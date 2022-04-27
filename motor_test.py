@@ -83,6 +83,8 @@ def raw_input():
 
 def esc_startup():
     pi.set_servo_pulsewidth(motor.p1, motor.min)
+    pi.set_servo_pulsewidth(motor.p1, motor.min)
+    pi.set_servo_pulsewidth(motor.p1, motor.min)
     menu()
 
 
@@ -145,7 +147,7 @@ def esc_settings():
 
         if inp == '':
             pi.set_servo_pulsewidth(pin, motor.min)
-            print("Press Enter again when different sequence runs again.")
+            print("Press Enter again when different sequence runs.")
             inp = raw_input()
 
             if inp == '':
