@@ -107,9 +107,9 @@ def send(right, left, mid):
 
 def choose_wheel(func):
     while True:
-        inp = raw_input()
         print("Choose which wheel for ", func, ".")
         print("[left] [right] [middle]")
+        inp = raw_input()
 
         if inp == "right":
             wheel = motor.p1
@@ -206,48 +206,49 @@ def manual_drive_mult():
             def __init__(self):
                 while True:
                     try:
-                        inp = raw_input()
-                        int_inp = int(inp)
-
-                        print("Give left wheel throttle.")
-                        if int_inp >= motor.max:
-                            print("Maximum left throttle is ", motor.max - 1, ".")
-                            self.left = motor.max - 1
-                        elif 0 < int_inp < 1100:
-                            print("Minimum left throttle is 1100.")
-                            self.left = 1100
-                        elif int_inp == 0:
-                            self.left = motor.min
-                        else:
-                            self.left = int_inp
-
                         print("Give right wheel throttle.")
-                        if int_inp >= motor.max:
+                        int_inp1 = int(raw_input())
+
+                        if int_inp1 >= motor.max:
                             print("Maximum right throttle is ", motor.max - 1, ".")
                             self.right = motor.max - 1
-                        elif 0 < int_inp < 1100:
+                        elif 0 < int_inp1 < 1100:
                             print("Minimum right throttle is 1100.")
                             self.right = 1100
-                        elif int_inp == 0:
+                        elif int_inp1 == 0:
                             self.right = motor.min
                         else:
-                            self.right = int_inp
+                            self.right = int_inp1
+
+                        print("Give left wheel throttle.")
+                        int_inp2 = int(raw_input())
+                        if int_inp2 >= motor.max:
+                            print("Maximum left throttle is ", motor.max - 1, ".")
+                            self.left = motor.max - 1
+                        elif 0 < int_inp2 < 1100:
+                            print("Minimum left throttle is 1100.")
+                            self.left = 1100
+                        elif int_inp2 == 0:
+                            self.left = motor.min
+                        else:
+                            self.left = int_inp2
 
                         print("Give middle wheel throttle.")
-                        if int_inp >= motor.max:
+                        int_inp3 = int(raw_input())
+                        if int_inp3 >= motor.max:
                             print("Maximum middle throttle is ", motor.max - 1, ".")
                             self.mid = motor.max - 1
-                        elif 0 < int_inp < 1100:
+                        elif 0 < int_inp3 < 1100:
                             print("Minimum left throttle is 1100.")
                             self.mid = 1100
-                        elif int_inp == 0:
+                        elif int_inp3 == 0:
                             self.mid = motor.min
                         else:
-                            self.mid = int_inp
+                            self.mid = int_inp3
                         break
 
                     except ValueError:
-                        if int_inp == "menu":
+                        if int_inp1 or int_inp2 or int_inp3 == "menu":
                             menu()
                             break
                         else:
@@ -262,9 +263,10 @@ def manual_drive_mult():
 
 def choose_single_mult():
     while True:
-        inp = raw_input()
         print("Choose single or multiple mode.")
         print("[s] [m]")
+        inp = raw_input()
+
         if inp == "s":
             manual_drive()
             break
