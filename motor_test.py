@@ -96,6 +96,7 @@ def set_motor_pulse(wheel, throttle):
 
 def set_servo_pulse(serv, pulse):
     pi.set_PWM_frequency(serv, servo.f)
+    pi.set_PWM_range(serv, servo.cmax)
     # pi.set_PWM_dutycycle(serv, servo.d)
     pi.set_servo_pulsewidth(serv, pulse)
 
