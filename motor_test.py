@@ -27,7 +27,7 @@ motor = MotorInfo()
 
 
 class ServoInfo:
-    p1 = 5  # continuous servo
+    p1 = 6  # continuous servo
     p2 = 6  #
     p3 = 13  #
 
