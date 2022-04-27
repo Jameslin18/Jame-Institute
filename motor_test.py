@@ -31,7 +31,7 @@ class ServoInfo:
     p2 = 6  #
     p3 = 13  #
 
-    f = 50
+    f = 200
     d = 100
 
     cmin = 550  # maxREV smart servo pulsewidth
