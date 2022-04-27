@@ -31,6 +31,9 @@ class ServoInfo:
     p2 = 6  #
     p3 = 13  #
 
+    f = 50
+    d = 100
+
     cmin = 550  # maxREV smart servo pulsewidth
     cmax = 2450  # min REV smart servo pulsewidth
 
@@ -92,8 +95,8 @@ def set_motor_pulse(wheel, throttle):
 
 
 def set_servo_pulse(serv, pulse):
-    # pi.set_PWM_frequency(serv, servo.f)
-    # pi.set_PWM_dutycycle(serv, servo.d)
+    pi.set_PWM_frequency(serv, servo.f)
+    pi.set_PWM_dutycycle(serv, servo.d)
     pi.set_servo_pulsewidth(serv, pulse)
 
 
