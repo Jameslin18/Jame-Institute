@@ -35,6 +35,7 @@ class ServoInfo:
     f = 50
 
     cmin = 25  # maxREV smart servo pulsewidth
+    cmid = 75
     cmax = 125  # min REV smart servo pulsewidth
 
 
@@ -97,7 +98,7 @@ def set_motor_pulse(wheel, throttle):
 def set_servo_duty(serv, duty):
     pi.set_PWM_frequency(serv, servo.f)
     pi.set_PWM_range(serv, servo.r)
-    pi.set_servo_dutycycle(serv, duty)
+    pi.set_PWM_dutycycle(serv, duty)
 
 
 def send(right, left, mid):
@@ -294,7 +295,7 @@ def cont_servo():
             set_servo_duty(servo.p1, servo.cmin)
 
         elif servo_inp == "stop":
-            set_servo_duty(servo.p1, 1500)
+            set_servo_duty(servo.p1, servo.cmid)
 
         elif servo_inp == "menu":
             menu()
