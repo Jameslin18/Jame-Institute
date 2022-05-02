@@ -1,7 +1,7 @@
 import pigpio  # importing GPIO library
 import os  # importing os library to communicate with the system
 import time
-from calc.py import calc_pulse
+from calc import calc_pulse
 
 
 os.system("sudo pigpiod")  # Launching GPIO library
@@ -191,7 +191,7 @@ def manual_drive():  # You will use this function to program your ESC if require
                     set_motor_pulse(pin, motor.max)
                 elif 0 < throttle < motor.init:
                     print("Minimum throttle is ", motor.init, ".")
-                    set_motor_pulse(pin, motor.s)
+                    set_motor_pulse(pin, motor.init)
 
                 elif throttle == 0:
                     pi.set_servo_pulsewidth(pin, motor.min)
