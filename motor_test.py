@@ -15,7 +15,7 @@ class MotorInfo:
 
     max = 2000  # change this if your ESC's max value is different
     min = 1000  # change this if your ESC's min value is different
-    init = 1200  # min speed to make motor move
+    init = 1100  # min speed to make motor move
 
     f = 16000
     d = 255
@@ -45,12 +45,12 @@ pi.set_servo_pulsewidth(motor.p1, 0)
 pi.set_servo_pulsewidth(motor.p2, 0)
 pi.set_servo_pulsewidth(motor.p3, 0)
 
-print("For first time launch, select [set]."
-      "For motor initialization, select [start]."
-      "For manual pulse inputs, select [man]."
-      "For specific shot configuration, select [ball]."
-      "For continuous servo control, select [cs]."
-      "For shutdown of all motors, select [stop].")
+print("For first time launch, select [set].\n"
+      "For motor initialization, select [start].\n"
+      "For manual pulse inputs, select [man].\n"
+      "For specific shot configuration, select [ball].\n"
+      "For continuous servo control, select [cs].\n"
+      "For shutdown of all motors, select [stop].\n")
 
 
 def menu():
