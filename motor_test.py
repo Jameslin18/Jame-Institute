@@ -1,7 +1,8 @@
 import pigpio  # importing GPIO library
-# import RPi.GPIO as GPIO
-import os  # importing os library so as to communicate with the system
-import time  # importing time library to make Rpi wait because its too impatient
+import os  # importing os library to communicate with the system
+import time
+from calc.py import calc_pulse
+
 
 os.system("sudo pigpiod")  # Launching GPIO library
 time.sleep(1)  # As i said it is too impatient and so if this delay is removed you will get an error
@@ -12,12 +13,9 @@ class MotorInfo:
     p2 = 27  # left
     p3 = 22  # mid
 
-    max = 2000  # change this if your ESC's max value is different or leave it be
-    min = 1000  # change this if your ESC's min value is different or leave it be
-
-    t1 = 1100
-    t2 = 1100
-    t3 = 1100
+    max = 2000  # change this if your ESC's max value is different
+    min = 1000  # change this if your ESC's min value is different
+    init = 1200  # min speed to make motor move
 
     f = 16000
     d = 255
@@ -47,12 +45,17 @@ pi.set_servo_pulsewidth(motor.p1, 0)
 pi.set_servo_pulsewidth(motor.p2, 0)
 pi.set_servo_pulsewidth(motor.p3, 0)
 
-print("For first time launch, select set. \n")
+print("For first time launch, select [set]."
+      "For motor initialization, select [start]."
+      "For manual pulse inputs, select [man]."
+      "For specific shot configuration, select [ball]."
+      "For continuous servo control, select [cs]."
+      "For shutdown of all motors, select [stop].")
 
 
 def menu():
     print("----------------------------------------")
-    print("| set | start | man | cs | send | stop |")
+    print("| set | start | man | ball | cs | stop |")
     print("----------------------------------------")
 
     inp = raw_input()
@@ -64,8 +67,8 @@ def menu():
         choose_single_mult()
     elif inp == "cs":
         cont_servo()
-    elif inp == "send":
-        send()
+    elif inp == "ball":
+        ball_config()
     elif inp == "stop":
         stop()
     elif inp == "troll":
@@ -101,10 +104,13 @@ def set_servo_duty(serv, duty):
     pi.set_PWM_dutycycle(serv, duty)
 
 
-def send(right, left, mid):
+def ball_config():
+    right, left, mid = calc_pulse()
+
     set_motor_pulse(motor.p1, right)
     set_motor_pulse(motor.p2, left)
     set_motor_pulse(motor.p3, mid)
+
     menu()
 
 
@@ -183,9 +189,9 @@ def manual_drive():  # You will use this function to program your ESC if require
                 if throttle >= motor.max:
                     print("Maximum throttle is ", motor.max - 1, ".")
                     set_motor_pulse(pin, motor.max)
-                elif 0 < throttle < 1100:
-                    print("Minimum throttle is 1100.")
-                    set_motor_pulse(pin, 1100)
+                elif 0 < throttle < motor.init:
+                    print("Minimum throttle is ", motor.init, ".")
+                    set_motor_pulse(pin, motor.s)
 
                 elif throttle == 0:
                     pi.set_servo_pulsewidth(pin, motor.min)
@@ -215,9 +221,9 @@ def manual_drive_mult():
                         if int_inp1 >= motor.max:
                             print("Maximum right throttle is ", motor.max - 1, ".")
                             self.right = motor.max - 1
-                        elif 0 < int_inp1 < 1100:
-                            print("Minimum right throttle is 1100.")
-                            self.right = 1100
+                        elif 0 < int_inp1 < motor.init:
+                            print("Minimum right throttle is ", motor.init, ".")
+                            self.right = motor.init
                         elif int_inp1 == 0:
                             self.right = motor.min
                         else:
@@ -228,9 +234,9 @@ def manual_drive_mult():
                         if int_inp2 >= motor.max:
                             print("Maximum left throttle is ", motor.max - 1, ".")
                             self.left = motor.max - 1
-                        elif 0 < int_inp2 < 1100:
-                            print("Minimum left throttle is 1100.")
-                            self.left = 1100
+                        elif 0 < int_inp2 < motor.init:
+                            print("Minimum left throttle is ", motor.init, ".")
+                            self.left = motor.init
                         elif int_inp2 == 0:
                             self.left = motor.min
                         else:
@@ -241,9 +247,9 @@ def manual_drive_mult():
                         if int_inp3 >= motor.max:
                             print("Maximum middle throttle is ", motor.max - 1, ".")
                             self.mid = motor.max - 1
-                        elif 0 < int_inp3 < 1100:
-                            print("Minimum left throttle is 1100.")
-                            self.mid = 1100
+                        elif 0 < int_inp3 < motor.init:
+                            print("Minimum left throttle is ", motor.init, ".")
+                            self.mid = motor.init
                         elif int_inp3 == 0:
                             self.mid = motor.min
                         else:

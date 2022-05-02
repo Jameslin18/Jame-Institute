@@ -3,9 +3,9 @@ from sympy import Eq, symbols, solve, Symbol
 
 
 def menu():
-    print("--------------------------------")
+    print("-------------------------------------")
     print("| ang | power | base | pulse |")
-    print("--------------------------------\n")
+    print("-------------------------------------\n")
     while True:
         inp = raw_input()
         if inp == "ang":
@@ -36,11 +36,9 @@ def angle_inp():
     return theta
 
 
-def ang_power(inp):
-    angular = inp
-    volt = float(angular / (60 * math.pi))
-    pulse = float(float(2000/9) * volt)
-    power = int(100 * float(pulse / 2000))
+def pulse_power(inp):
+    pulse = inp
+    power = float(100 * float(pulse / 2000))
     return power
 
 
@@ -69,7 +67,7 @@ def power_set():
         except ValueError:
             print("cringe.")
 
-    pulse = float(2000 * float(power/100))
+    pulse = float(1200 + 800 * float(power/100))
     print("Power set to ", power, ".")
 
     return pulse
@@ -93,8 +91,8 @@ def spin_set(max_n):
         except ValueError:
             print("cringe.")
 
-    pulse = float(2000 * float(power * float(max_n/100)))
-    print("Spin set to ", power, ".")
+    pulse = float(2000 * float(float(max_n/100) * float(power/100)))
+    print("Spin set to ", pulse, ".")
 
     return pulse
 
@@ -128,13 +126,14 @@ def choose_base_wheel():
             return theta, base
         elif float(theta) > 2 * math.pi:
             print("Cannot go over 360 degrees.")
+            break
 
 
 def max_net(base, ang):
     if base == "right":
         wr = ang
         wl = 0
-        wm = pulse_angular(2000)
+        wm = 2000
 
         wn = Symbol("wn", positive=True)
 
@@ -143,13 +142,13 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        out = pulse_power(max_n)
         return out
 
     elif base == "left":
         wr = 0
         wl = ang
-        wm = pulse_angular(2000)
+        wm = 2000
 
         wn = Symbol("wn", positive=True)
 
@@ -158,12 +157,14 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        print(max_n)
+        out = pulse_power(max_n)
+        print(out)
         return out
 
     elif base == "mid":
         wr = 0
-        wl = pulse_angular(2000)
+        wl = 2000
         wm = ang
 
         wn = Symbol("wn", positive=True)
@@ -173,13 +174,13 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        out = pulse_power(max_n)
         return out
 
     elif base == "left+right":
         wr = ang
         wl = wr
-        wm = pulse_angular(2000)
+        wm = 2000
 
         wn = Symbol("wn", positive=True)
 
@@ -188,11 +189,11 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        out = pulse_power(max_n)
         return out
 
     elif base == "left+mid":
-        wr = pulse_angular(2000)
+        wr = 2000
         wl = ang
         wm = wl
 
@@ -203,12 +204,12 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        out = pulse_power(max_n)
         return out
 
     elif base == "right+mid":
         wr = ang
-        wl = pulse_angular(2000)
+        wl = 2000
         wm = wr
 
         wn = Symbol("wn", positive=True)
@@ -218,7 +219,7 @@ def max_net(base, ang):
         sol = solve(eq, wn, dict=True)
         max_n = sol[0][wn]
 
-        out = ang_power(max_n)
+        out = pulse_power(max_n)
         return out
 
 
@@ -230,10 +231,10 @@ def calc_pulse():
         k = float(math.tan(theta))
 
     if base == "left":
-        wl = pulse_angular(power_set())
+        wl = power_set()
         wn = spin_set(max_net(base, wl))
 
-        wr, wm = symbols('wr wm', positive=True)
+        wr, wm = symbols('wr wm', real=True)
 
         eq1 = Eq(2*k*wm - k*wr - math.sqrt(3)*wr - k*wl + math.sqrt(3)*wl, 0)
         eq2 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
@@ -241,21 +242,21 @@ def calc_pulse():
         sol = solve([eq1, eq2], [wr, wm], dict=True)
 
         left = wl
-        right = sol[0][wr]
-        middle = sol[0][wm]
+        right = sol[1][wr]
+        middle = sol[1][wm]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
     elif base == "right":
-        wr = pulse_angular(power_set())
+        wr = power_set()
         wn = spin_set(max_net(base, wr))
 
-        wl, wm = symbols('wl wm', positive=True)
+        wl, wm = symbols('wl wm', real=True)
 
         eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
         eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
@@ -263,21 +264,21 @@ def calc_pulse():
         sol = solve([eq1, eq2], dict=True)
 
         right = wr
-        left = sol[0][wl]
-        middle = sol[0][wm]
+        left = sol[1][wl]
+        middle = sol[1][wm]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
     elif base == "mid":
-        wm = pulse_angular(power_set())
+        wm = power_set()
         wn = spin_set(max_net(base, wm))
 
-        wr, wl = symbols('wr wl', positive=True)
+        wr, wl = symbols('wr wl', real=True)
 
         eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
         eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
@@ -285,21 +286,21 @@ def calc_pulse():
         sol = solve([eq1, eq2], dict=True)
 
         middle = wm
-        right = sol[0][wr]
-        left = sol[0][wl]
+        right = sol[1][wr]
+        left = sol[1][wl]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
     elif base == "left+right":
-        wr = wl = pulse_angular(power_set())
-        wn = spin_set(max_net(base, wr))
+        wr = wl = power_set()
+        wn = max_net(base, wr)
 
-        wm = Symbol('wm', positive=True)
+        wm = Symbol('wm', real=True)
 
         eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
         eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
@@ -307,20 +308,20 @@ def calc_pulse():
         sol = solve([eq1, eq2], dict=True)
 
         right = left = wl
-        middle = sol[0][wm]
+        middle = sol[1][wm]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
     elif base == "left+mid":
-        wl = wm = pulse_angular(power_set())
-        wn = spin_set(max_net(base, wl))
+        wl = wm = power_set()
+        wn = max_net(base, wl)
 
-        wr = Symbol('wr', positive=True)
+        wr = Symbol('wr', real=True)
 
         eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
         eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
@@ -328,20 +329,20 @@ def calc_pulse():
         sol = solve([eq1, eq2], dict=True)
 
         middle = left = wl
-        right = sol[0][wr]
+        right = sol[1][wr]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
     elif base == "right+mid":
-        wr = wm = pulse_angular(power_set())
-        wn = spin_set(max_net(base, wr))
+        wr = wm = power_set()
+        wn = max_net(base, wr)
 
-        wl = Symbol('wl', positive=True)
+        wl = Symbol('wl', real=True)
 
         eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
         eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
@@ -349,14 +350,14 @@ def calc_pulse():
         sol = solve([eq1, eq2], dict=True)
 
         right = middle = wr
-        left = sol[0][wl]
+        left = sol[1][wl]
 
-        print("left = ", left)
         print("right = ", right)
+        print("left = ", left)
         print("middle = ", middle)
 
-        menu()
-        return left, right, middle
+        # menu()
+        return right, left, middle
 
 
 def pulse_angular(inp):
