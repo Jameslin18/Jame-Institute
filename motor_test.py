@@ -26,8 +26,8 @@ motor = MotorInfo()
 
 class ServoInfo:
     p1 = 13  # continuous servo
-    p2 = 6  #
-    p3 = 13  #
+    p2 = 19  # horizontal servo
+    p3 = 12  # vertical servo
 
     r = 1000
     f = 50
@@ -35,6 +35,14 @@ class ServoInfo:
     cmin = 25  # maxREV smart servo pulsewidth
     cmid = 75
     cmax = 125  # min REV smart servo pulsewidth
+
+    hmin = 25
+    hmid = 75
+    hmax = 125
+
+    vmin = 25
+    vmid = 75
+    vmax = 125
 
 
 servo = ServoInfo()
@@ -257,7 +265,7 @@ def manual_drive_mult():
                         break
 
                     except ValueError:
-                        if self.right or self.left or self.mid == "menu":
+                        if int_inp1 or int_inp2 or int_inp3 == "menu":
                             menu()
                             break
                         else:
@@ -309,6 +317,55 @@ def cont_servo():
 
         else:
             print("cringe.")
+
+
+def angle_servo(amin, amax):
+    while True:
+        ang = int(raw_input())
+
+        if ang < amin:
+            print("Minimum is ", amin, ".\n")
+        elif ang > amax:
+            print("Maximum is ", amax, ".\n")
+        else:
+            duty = float(ang + 135) * float(100 / 270) + 25
+            break
+
+    return duty
+
+
+def horiz_servo():
+    print("You have selected horizontal servo control.")
+    print("Enter menu to return.")
+    print("Enter angle value from -135 to 135")
+
+    while True:
+        try:
+            servo_inp = angle_servo(-135, 135)
+            set_servo_duty(servo.p2, servo_inp)
+
+        except ValueError:
+            if servo_inp == "menu":
+                menu()
+            else:
+                print("cringe.")
+
+
+def vert_servo():
+    print("You have selected vertical servo control.")
+    print("Enter menu to return.")
+    print("Enter angle value from 60 to 0")
+
+    while True:
+        try:
+            servo_inp = angle_servo(0, 60)
+            set_servo_duty(servo.p2, servo_inp)
+
+        except ValueError:
+            if servo_inp == "menu":
+                menu()
+            else:
+                print("cringe.")
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
