@@ -58,13 +58,15 @@ print("For first time launch, select [set].\n"
       "For manual pulse inputs, select [man].\n"
       "For specific shot configuration, select [ball].\n"
       "For continuous servo control, select [cs].\n"
+      "For horizontal deflector control, select [hs].\n"
+      "For vertical deflector control, select [vs].\n"
       "For shutdown of all motors, select [stop].\n")
 
 
 def menu():
-    print("----------------------------------------")
-    print("| set | start | man | ball | cs | stop |")
-    print("----------------------------------------")
+    print("--------------------------------------------------")
+    print("| set | start | man | ball | cs | hs | vs | stop |")
+    print("--------------------------------------------------")
 
     inp = raw_input()
     if inp == "set":
@@ -75,6 +77,10 @@ def menu():
         choose_single_mult()
     elif inp == "cs":
         cont_servo()
+    elif inp == "hs":
+        horiz_servo()
+    elif inp == "vs":
+        vert_servo()
     elif inp == "ball":
         ball_config()
     elif inp == "stop":
@@ -335,7 +341,7 @@ def angle_servo(amin, amax):
 
 
 def horiz_servo():
-    print("You have selected horizontal servo control.")
+    print("You have selected horizontal deflector control.")
     print("Enter menu to return.")
     print("Enter angle value from -135 to 135")
 
@@ -352,7 +358,7 @@ def horiz_servo():
 
 
 def vert_servo():
-    print("You have selected vertical servo control.")
+    print("You have selected vertical deflector control.")
     print("Enter menu to return.")
     print("Enter angle value from 60 to 0")
 
