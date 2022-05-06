@@ -357,7 +357,7 @@ def vert_servo():
 
     while True:
         try:
-            servo_inp = angle_servo(0, 0)
+            servo_inp = angle_servo(30, 0)
             set_servo_duty(servo.p3, servo_inp)
 
         except ValueError:
