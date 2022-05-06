@@ -271,11 +271,7 @@ def manual_drive_mult():
                         break
 
                     except ValueError:
-                        if int_inp1 or int_inp2 or int_inp3 == "menu":
-                            menu()
-                            break
-                        else:
-                            print("cringe.")
+                        menu()
 
         throttle = WheelThrottles()
 
@@ -351,10 +347,7 @@ def horiz_servo():
             set_servo_duty(servo.p2, servo_inp)
 
         except ValueError:
-            if servo_inp == "menu":
-                menu()
-            else:
-                print("cringe.")
+            menu()
 
 
 def vert_servo():
@@ -368,10 +361,7 @@ def vert_servo():
             set_servo_duty(servo.p2, servo_inp)
 
         except ValueError:
-            if servo_inp == "menu":
-                menu()
-            else:
-                print("cringe.")
+            menu()
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
