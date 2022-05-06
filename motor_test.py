@@ -339,11 +339,11 @@ def angle_servo(amin, amax):
 def horiz_servo():
     print("You have selected horizontal deflector control.")
     print("Enter menu to return.")
-    print("Enter angle value from -135 to 135")
+    print("Enter angle value from -20 to 20")
 
     while True:
         try:
-            servo_inp = angle_servo(-135, 135)
+            servo_inp = angle_servo(-20, 20)
             set_servo_duty(servo.p2, servo_inp)
 
         except ValueError:
