@@ -353,12 +353,12 @@ def horiz_servo():
 def vert_servo():
     print("You have selected vertical deflector control.")
     print("Enter menu to return.")
-    print("Enter angle value from 60 to 0")
+    print("Enter angle value from 60 to 90")
 
     while True:
         try:
-            servo_inp = angle_servo(0, 60)
-            set_servo_duty(servo.p2, servo_inp)
+            servo_inp = angle_servo(60, 90)
+            set_servo_duty(servo.p3, servo_inp)
 
         except ValueError:
             menu()
