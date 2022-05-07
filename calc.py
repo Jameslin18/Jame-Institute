@@ -135,17 +135,19 @@ def choose_base_wheel():
             break
 
 
-def max_net(base, ang):
+def max_net(base, ang, tan):
     if base == "right":
         wr = ang
         wl = 0
         wm = 2000
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
@@ -155,12 +157,14 @@ def max_net(base, ang):
         wr = 0
         wl = ang
         wm = 2000
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         print(max_n)
@@ -172,12 +176,14 @@ def max_net(base, ang):
         wr = 0
         wl = 2000
         wm = ang
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
@@ -187,12 +193,14 @@ def max_net(base, ang):
         wr = ang
         wl = wr
         wm = 2000
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
@@ -202,12 +210,14 @@ def max_net(base, ang):
         wr = 2000
         wl = ang
         wm = wl
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
@@ -217,12 +227,14 @@ def max_net(base, ang):
         wr = ang
         wl = 2000
         wm = wr
+        k = tan
 
         wn = Symbol("wn", positive=True)
 
-        eq = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq2 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
 
-        sol = solve(eq, wn, dict=True)
+        sol = solve([eq1, eq2], wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
@@ -238,7 +250,7 @@ def calc_pulse():
 
     if base == "left":
         wl = power_set()
-        wn = spin_set(max_net(base, wl))
+        wn = spin_set(max_net(base, wl, k))
 
         wr, wm = symbols('wr wm', real=True)
 
@@ -260,7 +272,7 @@ def calc_pulse():
 
     elif base == "right":
         wr = power_set()
-        wn = spin_set(max_net(base, wr))
+        wn = spin_set(max_net(base, wr, k))
 
         wl, wm = symbols('wl wm', real=True)
 
@@ -282,7 +294,7 @@ def calc_pulse():
 
     elif base == "mid":
         wm = power_set()
-        wn = spin_set(max_net(base, wm))
+        wn = spin_set(max_net(base, wm, k))
 
         wr, wl = symbols('wr wl', real=True)
 
@@ -304,7 +316,7 @@ def calc_pulse():
 
     elif base == "left+right":
         wr = wl = power_set()
-        wn = max_net(base, wr)
+        wn = max_net(base, wr, k)
 
         wm = Symbol('wm', real=True)
 
@@ -325,7 +337,7 @@ def calc_pulse():
 
     elif base == "left+mid":
         wl = wm = power_set()
-        wn = max_net(base, wl)
+        wn = max_net(base, wl, k)
 
         wr = Symbol('wr', real=True)
 
@@ -346,7 +358,7 @@ def calc_pulse():
 
     elif base == "right+mid":
         wr = wm = power_set()
-        wn = max_net(base, wr)
+        wn = max_net(base, wr, k)
 
         wl = Symbol('wl', real=True)
 
@@ -519,4 +531,4 @@ def deep_state():
         time.sleep(1)
 
 
-# menu()
+menu()
