@@ -250,6 +250,8 @@ def calc_pulse():
 
     if base == "left":
         wl = power_set()
+        print(wl)
+        print(k)
         wn = spin_set(max_net(base, wl, k))
 
         wr, wm = symbols('wr wm', real=True)
