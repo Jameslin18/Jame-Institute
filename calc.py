@@ -36,9 +36,12 @@ def raw_input():
 
 
 def angle_inp():
-    print("Give angle of rotation.")
-    deg = int(raw_input())
-    theta = float(deg * math.pi/180)
+    print("Give angle of rotation, or enter 'no spin'.")
+    try:
+        deg = int(raw_input())
+        theta = float(deg * math.pi/180)
+    except ValueError:
+        theta = "no spin"
     return theta
 
 
@@ -74,8 +77,8 @@ def power_set():
             print("cringe.")
 
     pulse = float(1200 + 800 * float(power/100))
-    print("Power set to ", power, ".")
 
+    print("Power set to ", power, ".")
     return pulse
 
 
@@ -133,15 +136,37 @@ def choose_base_wheel():
         elif float(theta) > 2 * math.pi:
             print("Cannot go over 360 degrees.")
             break
+        elif str(theta) == "no spin":
+            theta = 0
+            base = "no spin"
+            print("Set to no spin.")
+            return theta, base
 
 
-def max_net(base, ang):
+def net_boundary(k):
+    w1, w2 = symbols("w1 w2", nonnegative=True)
+
+    eq1 = Eq(k - w1/w2, 0)
+    eq2 = Eq(w1**2 + w2**2 - 2000)
+
+    sol = solve([eq1, eq2], [w1, w2], dict=True)
+
+    print(sol)
+    bound1 = sol[0][w1]
+    bound2 = sol[0][w2]
+
+    return bound1, bound2
+
+
+def max_net(base, ang, tan):
+    tan = k
+
     if base == "right":
         wr = ang
         wl = 2000
         wm = 2000
 
-        wn = Symbol("wn", positive=True)
+        wn = Symbol("wn", nonnegative=True)
 
         eq1 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
 
@@ -174,7 +199,7 @@ def max_net(base, ang):
         wl = 2000
         wm = ang
 
-        wn = Symbol("wn", positive=True)
+        wn = Symbol("wn", nonnegative=True)
 
         eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
@@ -189,7 +214,7 @@ def max_net(base, ang):
         wl = wr
         wm = 2000
 
-        wn = Symbol("wn", positive=True)
+        wn = Symbol("wn", nonnegative=True)
 
         eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
@@ -204,7 +229,7 @@ def max_net(base, ang):
         wl = ang
         wm = wl
 
-        wn = Symbol("wn", positive=True)
+        wn = Symbol("wn", nonnegative=True)
 
         eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
@@ -219,7 +244,7 @@ def max_net(base, ang):
         wl = 2000
         wm = wr
 
-        wn = Symbol("wn", positive=True)
+        wn = Symbol("wn", nonnegative=True)
 
         eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
@@ -239,22 +264,27 @@ def calc_pulse():
 
     if base == "left":
         wl = power_set()
-        wn = spin_set(max_net(base, wl))
+        if wl == 2000:
+            right = middle = wl
+            print("No Spin.")
+        else:
+            wn = spin_set(max_net(base, wl, k))
 
-        wr, wm = symbols('wr wm', real=True)
+            wr, wm = symbols('wr wm', real=True)
 
-        eq1 = Eq(2*k*wm - k*wr - math.sqrt(3)*wr - k*wl + math.sqrt(3)*wl, 0)
-        eq2 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+            eq1 = Eq(2*k*wm - k*wr - math.sqrt(3)*wr - k*wl + math.sqrt(3)*wl, 0)
+            eq2 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
 
-        sol = solve([eq1, eq2], [wr, wm], dict=True)
+            sol = solve([eq1, eq2], [wr, wm], dict=True)
+
+            try:
+                right = sol[1][wr]
+                middle = sol[1][wm]
+            except IndexError:
+                right = sol[0][wr]
+                middle = sol[0][wm]
 
         left = wl
-        try:
-            right = sol[1][wr]
-            middle = sol[1][wm]
-        except IndexError:
-            right = sol[0][wr]
-            middle = sol[0][wm]
 
         print("right = ", right)
         print("left = ", left)
@@ -265,22 +295,27 @@ def calc_pulse():
 
     elif base == "right":
         wr = power_set()
-        wn = spin_set(max_net(base, wr))
+        if wr == 2000:
+            left = middle = wr
+            print("No Spin.")
+        else:
+            wn = spin_set(max_net(base, wr))
 
-        wl, wm = symbols('wl wm', real=True)
+            wl, wm = symbols('wl wm', real=True)
 
-        eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-        eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+            sol = solve([eq1, eq2], dict=True)
+
+            try:
+                left = sol[1][wl]
+                middle = sol[1][wm]
+            except IndexError:
+                left = sol[0][wl]
+                middle = sol[0][wm]
 
         right = wr
-        try:
-            left = sol[1][wl]
-            middle = sol[1][wm]
-        except IndexError:
-            left = sol[0][wl]
-            middle = sol[0][wm]
 
         print("right = ", right)
         print("left = ", left)
@@ -291,22 +326,27 @@ def calc_pulse():
 
     elif base == "mid":
         wm = power_set()
-        wn = spin_set(max_net(base, wm))
+        if wm == 2000:
+            left = right = wm
+            print("No Spin.")
+        else:
+            wn = spin_set(max_net(base, wm))
 
-        wr, wl = symbols('wr wl', real=True)
+            wr, wl = symbols('wr wl', real=True)
 
-        eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-        eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+            sol = solve([eq1, eq2], dict=True)
+
+            try:
+                right = sol[1][wr]
+                left = sol[1][wl]
+            except IndexError:
+                right = sol[0][wr]
+                left = sol[0][wl]
 
         middle = wm
-        try:
-            right = sol[1][wr]
-            left = sol[1][wl]
-        except IndexError:
-            right = sol[0][wr]
-            left = sol[0][wl]
 
         print("right = ", right)
         print("left = ", left)
@@ -317,20 +357,25 @@ def calc_pulse():
 
     elif base == "left+right":
         wr = wl = power_set()
-        wn = max_net(base, wr)
+        if wr == 2000:
+            middle = wr
+            print("No Spin.")
+        else:
+            wn = max_net(base, wr)
 
-        wm = Symbol('wm', real=True)
+            wm = Symbol('wm', real=True)
 
-        eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-        eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+            sol = solve([eq1, eq2], dict=True)
+
+            try:
+                middle = sol[1][wm]
+            except IndexError:
+                middle = sol[0][wm]
 
         right = left = wl
-        try:
-            middle = sol[1][wm]
-        except IndexError:
-            middle = sol[0][wm]
 
         print("right = ", right)
         print("left = ", left)
@@ -341,20 +386,25 @@ def calc_pulse():
 
     elif base == "left+mid":
         wl = wm = power_set()
-        wn = max_net(base, wl)
+        if wl == 2000:
+            right = wl
+            print("No Spin.")
+        else:
+            wn = max_net(base, wl)
 
-        wr = Symbol('wr', real=True)
+            wr = Symbol('wr', real=True)
 
-        eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-        eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+            sol = solve([eq1, eq2], dict=True)
+
+            try:
+                right = sol[1][wr]
+            except IndexError:
+                right = sol[0][wr]
 
         middle = left = wl
-        try:
-            right = sol[1][wr]
-        except IndexError:
-            right = sol[0][wr]
 
         print("right = ", right)
         print("left = ", left)
@@ -365,20 +415,35 @@ def calc_pulse():
 
     elif base == "right+mid":
         wr = wm = power_set()
-        wn = max_net(base, wr)
+        if wr == 2000:
+            left = wr
+            print("No Spin.")
+        else:
+            wn = max_net(base, wr)
 
-        wl = Symbol('wl', real=True)
+            wl = Symbol('wl', real=True)
 
-        eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-        eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
 
-        sol = solve([eq1, eq2], dict=True)
+            sol = solve([eq1, eq2], dict=True)
+
+            try:
+                left = sol[1][wl]
+            except IndexError:
+                left = sol[0][wl]
 
         right = middle = wr
-        try:
-            left = sol[1][wl]
-        except IndexError:
-            left = sol[0][wl]
+
+        print("right = ", right)
+        print("left = ", left)
+        print("middle = ", middle)
+
+        # menu()
+        return right, left, middle
+
+    elif base == "no spin":
+        right = left = middle = power_set()
 
         print("right = ", right)
         print("left = ", left)
