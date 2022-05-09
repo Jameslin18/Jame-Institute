@@ -144,7 +144,12 @@ def choose_base_wheel():
 
 
 def net_boundary(k):
+    w = Symbol('w', nonnegative=True)
     w1, w2 = symbols("w1 w2", nonnegative=True)
+
+    class AngR:
+        i = -1/2 * w
+        j = 
 
     eq1 = Eq(k - w1/w2, 0)
     eq2 = Eq(w1**2 + w2**2 - 2000)
