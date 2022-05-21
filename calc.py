@@ -107,73 +107,116 @@ def spin_set(max_n):
 
 
 def choose_base_wheel():
-    theta = angle_inp()
     while True:
-        if 0 < float(theta) < 2 * math.pi / 3:
-            base = "left"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif 4 * math.pi / 3 < float(theta) < 2 * math.pi:
-            base = "right"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif 2 * math.pi / 3 < float(theta) < 4 * math.pi / 3:
-            base = "mid"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif float(theta) == 0 and 2 * math.pi:
-            base = "left+right"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif float(theta) == 2 * math.pi / 3:
-            base = "left+mid"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif float(theta) == 4 * math.pi / 3:
-            base = "right+mid"
-            print("Base wheel(s) = ", base)
-            return theta, base
-        elif float(theta) > 2 * math.pi:
-            print("Cannot go over 360 degrees.")
-            break
-        elif str(theta) == "no spin":
-            theta = 0
-            base = "no spin"
-            print("Set to no spin.")
-            return theta, base
+        theta = angle_inp()
+        while True:
+            if 0 < float(theta) < 2 * math.pi / 3:
+                base = "left"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif 4 * math.pi / 3 < float(theta) < 2 * math.pi:
+                base = "right"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif 2 * math.pi / 3 < float(theta) < 4 * math.pi / 3:
+                base = "mid"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif float(theta) == 0 and 2 * math.pi:
+                base = "left+right"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif float(theta) == 2 * math.pi / 3:
+                base = "left+mid"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif float(theta) == 4 * math.pi / 3:
+                base = "right+mid"
+                print("Base wheel(s) = ", base)
+                return theta, base
+            elif float(theta) > 2 * math.pi:
+                print("Cannot go over 360 degrees.")
+                break
+            elif str(theta) == "no spin":
+                theta = 0
+                base = "no spin"
+                print("Set to no spin.")
+                return theta, base
 
 
-def net_boundary(k):
-    w = Symbol('w', nonnegative=True)
-    w1, w2 = symbols("w1 w2", nonnegative=True)
+def net_boundary_eq(k, power, j1, j2, i1, i2):
+    j1, j2, i1, i2 = symbols("j1 j2 i1 i2", nonnegative=True)
 
-    class AngR:
-        i = -1/2 * w
-        j = 
+    eq1 = Eq(k - (j1 + j2) / (i1 + i2), 0)
+    eq2 = Eq((j1 + j2) ** 2 + (i1 + i2) ** 2 - (2000 - power) ** 2)
 
-    eq1 = Eq(k - w1/w2, 0)
-    eq2 = Eq(w1**2 + w2**2 - 2000)
-
-    sol = solve([eq1, eq2], [w1, w2], dict=True)
-
-    print(sol)
-    bound1 = sol[0][w1]
-    bound2 = sol[0][w2]
-
-    return bound1, bound2
+    return eq1, eq2
 
 
-def max_net(base, ang, tan):
-    tan = k
+def net_boundary(k, power, base):
+    wr, wl, wm = symbols("wr wl wm", nonnegative=True)
+
+    class JComp:
+        r = float(math.sqrt(3) / 2) * wr
+        l = float(-math.sqrt(3) / 2) * wl
+        m = 0
+
+    j = JComp()
+
+    class IComp:
+        r = -1 / 2 * wr
+        l = - 1 / 2 * wl
+        m = wm
+
+    i = IComp()
+
+    if base == "right":
+
+        eq1, eq2 = net_boundary_eq(k, power, j.l, j.m, i. l, i.m)
+
+        sol = solve([eq1, eq2], [wl, wm], dict=True)
+        print(sol)
+
+        out = [sol[0][wl], sol[0][wm]]
+        new_out = list(out)
+        return new_out
+
+    elif base == "left":
+
+        eq1, eq2 = net_boundary_eq(k, power, j.r, j.m, i.r, i.m)
+
+        sol = solve([eq1, eq2], [wr, wm], dict=True)
+        print(sol)
+        out = float(sol[0][wr]), float(sol[0][wm])
+
+        return out
+
+    elif base == "mid":
+
+        eq1, eq2 = net_boundary_eq(k, power, j.r, j.l, i.r, i.l)
+
+        sol = solve([eq1, eq2], [wr, wl], dict=True)
+        print(sol)
+        out_1 = sol[0][wr]
+        out_2 = sol[0][wl]
+
+        return out_1, out_2
+
+
+def max_net_eq(wr, wl, wm, wn):
+    eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+    return eq1
+
+
+def max_net(base, ang, k):
 
     if base == "right":
         wr = ang
-        wl = 2000
-        wm = 2000
+        wl, wm = net_boundary(base, ang, k)
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
@@ -182,13 +225,12 @@ def max_net(base, ang, tan):
         return out
 
     elif base == "left":
-        wr = 2000
         wl = ang
-        wm = 2000
+        wr, wm = net_boundary(base, ang, k)
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
@@ -200,13 +242,12 @@ def max_net(base, ang, tan):
         return out
 
     elif base == "mid":
-        wr = 2000
-        wl = 2000
+        wr, wl = net_boundary(base, ang, k)
         wm = ang
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
@@ -221,7 +262,7 @@ def max_net(base, ang, tan):
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
@@ -236,7 +277,7 @@ def max_net(base, ang, tan):
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
@@ -251,13 +292,20 @@ def max_net(base, ang, tan):
 
         wn = Symbol("wn", nonnegative=True)
 
-        eq1 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+        eq1 = max_net_eq(wr, wl, wm, wn)
 
         sol = solve(eq1, wn, dict=True)
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
         return out
+
+
+def calc_pulse_eq(k, wr, wl, wm, wn):
+    eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
+    eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+
+    return eq1, eq2
 
 
 def calc_pulse():
@@ -277,8 +325,7 @@ def calc_pulse():
 
             wr, wm = symbols('wr wm', real=True)
 
-            eq1 = Eq(2*k*wm - k*wr - math.sqrt(3)*wr - k*wl + math.sqrt(3)*wl, 0)
-            eq2 = Eq(wr**2 + wl**2 + wm**2 - wr*wl - wl*wm - wr*wm - wn**2, 0)
+            eq1, eq2 = calc_pulse_eq(k ,wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], [wr, wm], dict=True)
 
@@ -304,12 +351,11 @@ def calc_pulse():
             left = middle = wr
             print("No Spin.")
         else:
-            wn = spin_set(max_net(base, wr))
+            wn = spin_set(max_net(base, wr, k))
 
             wl, wm = symbols('wl wm', real=True)
 
-            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1, eq2 = calc_pulse_eq(k ,wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], dict=True)
 
@@ -335,12 +381,11 @@ def calc_pulse():
             left = right = wm
             print("No Spin.")
         else:
-            wn = spin_set(max_net(base, wm))
+            wn = spin_set(max_net(base, wm, k))
 
             wr, wl = symbols('wr wl', real=True)
 
-            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1, eq2 = calc_pulse_eq(k ,wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], dict=True)
 
@@ -366,12 +411,11 @@ def calc_pulse():
             middle = wr
             print("No Spin.")
         else:
-            wn = max_net(base, wr)
+            wn = max_net(base, wr, k)
 
             wm = Symbol('wm', real=True)
 
-            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1, eq2 = calc_pulse_eq(k ,wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], dict=True)
 
@@ -395,12 +439,11 @@ def calc_pulse():
             right = wl
             print("No Spin.")
         else:
-            wn = max_net(base, wl)
+            wn = max_net(base, wl, k)
 
             wr = Symbol('wr', real=True)
 
-            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1, eq2 = calc_pulse_eq(k ,wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], dict=True)
 
@@ -424,12 +467,11 @@ def calc_pulse():
             left = wr
             print("No Spin.")
         else:
-            wn = max_net(base, wr)
+            wn = max_net(base, wr, k)
 
             wl = Symbol('wl', real=True)
 
-            eq1 = Eq(2 * k * wm - k * wr - math.sqrt(3) * wr - k * wl + math.sqrt(3) * wl, 0)
-            eq2 = Eq(wr ** 2 + wl ** 2 + wm ** 2 - wr * wl - wl * wm - wr * wm - wn ** 2, 0)
+            eq1, eq2 = calc_pulse_eq(k, wr, wl, wm, wn)
 
             sol = solve([eq1, eq2], dict=True)
 
