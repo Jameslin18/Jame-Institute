@@ -76,8 +76,8 @@ def power_set():
         except ValueError:
             print("cringe.")
 
-    pulse = float(1200 + 800 * float(power/100))
-
+    pulse = float(1100 + 900 * float(power/100))
+    print(pulse)
     print("Power set to ", power, ".")
     return pulse
 
@@ -144,13 +144,14 @@ def choose_base_wheel():
                 return theta, base
 
 
-def net_boundary_eq(k, power, j1, j2, i1, i2):
+def net_boundary_eq(k, power):
+
     j1, j2, i1, i2 = symbols("j1 j2 i1 i2", nonnegative=True)
 
     eq1 = Eq(k - (j1 + j2) / (i1 + i2), 0)
-    eq2 = Eq((j1 + j2) ** 2 + (i1 + i2) ** 2 - (2000 - power) ** 2)
+    eq2 = Eq((j1 + j2) ** 2 + (i1 + i2) ** 2 - 2000 ** 2, 0)
 
-    return eq1, eq2
+    return eq1, eq2, j1, j2, i1, i2
 
 
 def net_boundary(k, power, base):
@@ -172,35 +173,42 @@ def net_boundary(k, power, base):
 
     if base == "right":
 
-        eq1, eq2 = net_boundary_eq(k, power, j.l, j.m, i. l, i.m)
+        eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
-        sol = solve([eq1, eq2], [wl, wm], dict=True)
+        n_eq1 = eq1.subs([(j1, j.l), (j2, j.m), (i1, i.l), (i2, i.m)])
+        n_eq2 = eq2.subs([(j1, j.l), (j2, j.m), (i1, i.l), (i2, i.m)])
+
+        sol = solve([n_eq1, n_eq2], [wl, wm], dict=True)
         print(sol)
 
         out = [sol[0][wl], sol[0][wm]]
-        new_out = list(out)
-        return new_out
+        return out
 
     elif base == "left":
 
-        eq1, eq2 = net_boundary_eq(k, power, j.r, j.m, i.r, i.m)
+        eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
-        sol = solve([eq1, eq2], [wr, wm], dict=True)
+        n_eq1 = eq1.subs([(j1, j.r), (j2, j.m), (i1, i.r), (i2, i.m)])
+        n_eq2 = eq2.subs([(j1, j.r), (j2, j.m), (i1, i.r), (i2, i.m)])
+
+        sol = solve([n_eq1, n_eq2], [wr, wm], dict=True)
         print(sol)
-        out = float(sol[0][wr]), float(sol[0][wm])
 
+        out = [sol[0][wr], sol[0][wm]]
         return out
 
     elif base == "mid":
 
-        eq1, eq2 = net_boundary_eq(k, power, j.r, j.l, i.r, i.l)
+        eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
-        sol = solve([eq1, eq2], [wr, wl], dict=True)
+        n_eq1 = eq1.subs([(j1, j.r), (j2, j.l), (i1, i.r), (i2, i.l)])
+        n_eq2 = eq2.subs([(j1, j.r), (j2, j.l), (i1, i.r), (i2, i.l)])
+
+        sol = solve([n_eq1, n_eq2], [wr, wl], dict=True)
         print(sol)
-        out_1 = sol[0][wr]
-        out_2 = sol[0][wl]
 
-        return out_1, out_2
+        out = [sol[0][wr], sol[0][wl]]
+        return out
 
 
 def max_net_eq(wr, wl, wm, wn):
@@ -212,7 +220,7 @@ def max_net(base, ang, k):
 
     if base == "right":
         wr = ang
-        wl, wm = net_boundary(base, ang, k)
+        wl, wm = net_boundary(k, ang, base)
 
         wn = Symbol("wn", nonnegative=True)
 
@@ -222,11 +230,12 @@ def max_net(base, ang, k):
         max_n = sol[0][wn]
 
         out = pulse_power(max_n)
+        print(max_n)
         return out
 
     elif base == "left":
         wl = ang
-        wr, wm = net_boundary(base, ang, k)
+        wr, wm = net_boundary(k, ang, base)
 
         wn = Symbol("wn", nonnegative=True)
 
@@ -242,7 +251,7 @@ def max_net(base, ang, k):
         return out
 
     elif base == "mid":
-        wr, wl = net_boundary(base, ang, k)
+        wr, wl = net_boundary(k, ang, base)
         wm = ang
 
         wn = Symbol("wn", nonnegative=True)
@@ -653,4 +662,4 @@ def deep_state():
         time.sleep(1)
 
 
-menu()
+calc_pulse()
