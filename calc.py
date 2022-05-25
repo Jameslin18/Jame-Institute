@@ -4,9 +4,9 @@ from sympy import Eq, symbols, solve, Symbol
 
 
 def menu():
-    print("-------------------------------------")
-    print("| ang | power | base | pulse |")
-    print("-------------------------------------\n")
+    print("-----------------------")
+    print("| ang | power | pulse |")
+    print("-----------------------\n")
     while True:
         inp = raw_input()
         if inp == "ang":
@@ -15,11 +15,8 @@ def menu():
         elif inp == "power":
             power_set()
             break
-        elif inp == "base":
-            choose_base_wheel()
-            break
         elif inp == "pulse":
-            calc_pulse()
+            ang_calc_pulse()
             break
         elif inp == "troll":
             troll()
@@ -106,9 +103,9 @@ def spin_set(max_n):
     return pulse
 
 
-def choose_base_wheel():
+def choose_base_wheel(theta):
     while True:
-        theta = angle_inp()
+        theta = True
         while True:
             if 0 < float(theta) < 2 * math.pi / 3:
                 base = "left"
@@ -149,12 +146,12 @@ def net_boundary_eq(k, power):
     j1, j2, i1, i2 = symbols("j1 j2 i1 i2", nonnegative=True)
 
     eq1 = Eq(k - (j1 + j2) / (i1 + i2), 0)
-    eq2 = Eq((j1 + j2) ** 2 + (i1 + i2) ** 2 - 2000 ** 2, 0)
+    eq2 = Eq((j1 + j2) ** 2 + (i1 + i2) ** 2 - (2000-power) ** 2, 0)
 
     return eq1, eq2, j1, j2, i1, i2
 
 
-def net_boundary(k, power, base):
+def net_boundary(k, power, base, theta):
     wr, wl, wm = symbols("wr wl wm", nonnegative=True)
 
     class JComp:
@@ -172,19 +169,25 @@ def net_boundary(k, power, base):
     i = IComp()
 
     if base == "right":
-
+        wl = 2000
         eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
         n_eq1 = eq1.subs([(j1, j.l), (j2, j.m), (i1, i.l), (i2, i.m)])
         n_eq2 = eq2.subs([(j1, j.l), (j2, j.m), (i1, i.l), (i2, i.m)])
 
-        sol = solve([n_eq1, n_eq2], [wl, wm], dict=True)
+        sol = solve([n_eq1, n_eq2], wm, dict=True)
         print(sol)
 
-        out = [sol[0][wl], sol[0][wm]]
+        out = wl, sol[0][wm]
         return out
 
     elif base == "left":
+        if 0 < theta < math.pi / 3:
+            wm = 2000
+        elif math.pi / 3 < theta < 2 * math.pi / 3:
+            wr = 2000
+        elif theta == math.pi / 3:
+            wr = wm = 2000
 
         eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
@@ -198,6 +201,12 @@ def net_boundary(k, power, base):
         return out
 
     elif base == "mid":
+        if 2 * math.pi / 3 < theta < math.pi:
+            wr = 2000
+        elif math.pi < theta < 4 * math.pi / 3:
+            wl = 2000
+        elif theta == math.pi:
+            wl = wr = 2000
 
         eq1, eq2, j1, j2, i1, i2 = net_boundary_eq(k, power)
 
@@ -216,11 +225,11 @@ def max_net_eq(wr, wl, wm, wn):
     return eq1
 
 
-def max_net(base, ang, k):
+def max_net(base, ang, k, theta):
 
     if base == "right":
         wr = ang
-        wl, wm = net_boundary(k, ang, base)
+        wl, wm = net_boundary(k, ang, base, theta)
 
         wn = Symbol("wn", nonnegative=True)
 
@@ -235,7 +244,7 @@ def max_net(base, ang, k):
 
     elif base == "left":
         wl = ang
-        wr, wm = net_boundary(k, ang, base)
+        wr, wm = net_boundary(k, ang, base, theta)
 
         wn = Symbol("wn", nonnegative=True)
 
@@ -251,7 +260,7 @@ def max_net(base, ang, k):
         return out
 
     elif base == "mid":
-        wr, wl = net_boundary(k, ang, base)
+        wr, wl = net_boundary(k, ang, base, theta)
         wm = ang
 
         wn = Symbol("wn", nonnegative=True)
@@ -317,8 +326,8 @@ def calc_pulse_eq(k, wr, wl, wm, wn):
     return eq1, eq2
 
 
-def calc_pulse():
-    theta, base = choose_base_wheel()
+def ang_calc_pulse():
+    theta, base = choose_base_wheel(angle_inp())
     if theta == math.pi/2 or 3*math.pi/2:
         k = float(math.tan(theta+0.01))
     else:
@@ -330,7 +339,7 @@ def calc_pulse():
             right = middle = wl
             print("No Spin.")
         else:
-            wn = spin_set(max_net(base, wl, k))
+            wn = spin_set(max_net(base, wl, k, theta))
 
             wr, wm = symbols('wr wm', real=True)
 
@@ -360,7 +369,7 @@ def calc_pulse():
             left = middle = wr
             print("No Spin.")
         else:
-            wn = spin_set(max_net(base, wr, k))
+            wn = spin_set(max_net(base, wr, k, theta))
 
             wl, wm = symbols('wl wm', real=True)
 
@@ -390,7 +399,7 @@ def calc_pulse():
             left = right = wm
             print("No Spin.")
         else:
-            wn = spin_set(max_net(base, wm, k))
+            wn = spin_set(max_net(base, wm, k, theta))
 
             wr, wl = symbols('wr wl', real=True)
 
@@ -420,7 +429,7 @@ def calc_pulse():
             middle = wr
             print("No Spin.")
         else:
-            wn = max_net(base, wr, k)
+            wn = max_net(base, wr, k, theta)
 
             wm = Symbol('wm', real=True)
 
@@ -448,7 +457,7 @@ def calc_pulse():
             right = wl
             print("No Spin.")
         else:
-            wn = max_net(base, wl, k)
+            wn = max_net(base, wl, k, theta)
 
             wr = Symbol('wr', real=True)
 
@@ -476,7 +485,7 @@ def calc_pulse():
             left = wr
             print("No Spin.")
         else:
-            wn = max_net(base, wr, k)
+            wn = max_net(base, wr, k, theta)
 
             wl = Symbol('wl', real=True)
 
@@ -660,6 +669,3 @@ def deep_state():
     while True:
         print("KILL JOHN LENNON !\n")
         time.sleep(1)
-
-
-calc_pulse()
