@@ -1,6 +1,6 @@
 import pigpio
 from motor_test import motor, servo
-from motor_test import set_motor_pulse, set_servo_duty
+from motor_test import set_motor_pulse, set_servo_duty, angle_servo
 
 
 def set_start():
