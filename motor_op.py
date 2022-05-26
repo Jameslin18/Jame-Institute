@@ -1,3 +1,4 @@
+import pigpio
 from motor_test import motor, servo
 from motor_test import set_motor_pulse, set_servo_duty
 
