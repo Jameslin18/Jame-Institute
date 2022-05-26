@@ -16,12 +16,14 @@ def set_all_wheels(right, left, mid, indicator):
         set_motor_pulse(motor.p2, left)
         set_motor_pulse(motor.p3, mid)
     elif indicator == "stop":
-        set_start()
+        set_motor_pulse(motor.p1, motor.init)
+        set_motor_pulse(motor.p2, motor.init)
+        set_motor_pulse(motor.p3, motor.init)
 
 
 def set_cont_servo(indicator):
     if indicator == "go":
-        set_servo_duty(servo.p1, servo.cmax)
+        set_servo_duty(servo.p1, servo.cmin)
     elif indicator == "stop":
         set_servo_duty(servo.p1, servo.cmid)
 
