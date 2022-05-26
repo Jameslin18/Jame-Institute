@@ -359,6 +359,3 @@ def stop():  # This will stop every action your Pi is performing for ESC of cour
     pi.set_servo_pulsewidth(motor.p2, 0)
     pi.set_servo_pulsewidth(motor.p3, 0)
     pi.stop()
-
-
-test_menu()
