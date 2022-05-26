@@ -9,9 +9,8 @@ def set_start():
     pi.set_servo_pulsewidth(motor.p3, motor.min)
 
 
-def set_all_wheels(throttles, indicator):
+def set_all_wheels(right, left, mid, indicator):
     if indicator == "go":
-        throttles = right, left, mid
 
         set_motor_pulse(motor.p1, right)
         set_motor_pulse(motor.p2, left)

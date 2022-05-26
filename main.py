@@ -37,7 +37,7 @@ def menu():
 def ball_config():
     print("You are now able to configure the type of ball to practice with.\n")
 
-    throttles = comp_calc_pulse()
+    right, left, mid = comp_calc_pulse()
 
     set_horiz_servo()
     set_vert_servo()
@@ -46,10 +46,10 @@ def ball_config():
     while True:
         inp = raw_input()
         if inp == "go":
-            set_all_wheels(throttles, inp)
+            set_all_wheels(right, left, mid, inp)
             set_cont_servo(inp)
         elif inp == "stop":
-            set_all_wheels(throttles, inp)
+            set_all_wheels(right, left, mid, inp)
             set_cont_servo(inp)
         elif inp == "menu":
             menu()
