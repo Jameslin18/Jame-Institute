@@ -2,7 +2,6 @@ import time
 import pigpio
 import os
 from motor_test import test_menu, esc_settings, stop, raw_input
-from motor_test import troll, deep_state
 from motor_op import set_start, set_all_wheels, set_cont_servo, set_horiz_servo, set_vert_servo
 from comp_calc import comp_calc_pulse
 from calc import angle_calc
@@ -19,7 +18,7 @@ def menu():
     inp = raw_input()
 
     if inp == "start":
-        esc_startup()
+        set_start()
     elif inp == "set":
         esc_settings()
     elif inp == "seq":
@@ -30,10 +29,6 @@ def menu():
         angle_calc()
     elif inp == "stop":
         stop()
-    elif inp == "troll":
-        troll()
-    elif inp == "psychosis":
-        deep_state()
     else:
         print("Invalid input.")
         menu()
@@ -62,3 +57,6 @@ def ball_config():
             break
         else:
             print("Invalid input.")
+
+
+menu()
