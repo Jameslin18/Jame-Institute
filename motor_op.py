@@ -34,6 +34,7 @@ def set_horiz_servo():
         try:
             servo_inp = angle_servo(-20, 20)
             set_servo_duty(servo.p2, servo_inp)
+            break
 
         except ValueError:
             print("Invalid type input.")
@@ -46,6 +47,7 @@ def set_vert_servo():
         try:
             servo_inp = angle_servo(0, 30)
             set_servo_duty(servo.p3, servo_inp)
+            break
 
         except ValueError:
             print("Invalid type input.")
