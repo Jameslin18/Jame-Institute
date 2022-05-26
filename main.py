@@ -21,7 +21,7 @@ def menu():
         set_start()
     elif inp == "set":
         esc_settings()
-    elif inp == "seq":
+    elif inp == "con":
         ball_config()
     elif inp == "sim":
         angle_calc()
