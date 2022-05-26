@@ -1,7 +1,7 @@
 import time
 import pigpio
 import os
-from motor_test import esc_settings, stop, raw_input
+from motor_test import esc_settings, stop, raw_input, test_menu
 from motor_op import set_start, set_all_wheels, set_cont_servo, set_horiz_servo, set_vert_servo
 from comp_calc import comp_calc_pulse
 from calc import angle_calc
@@ -12,7 +12,7 @@ time.sleep(1)
 
 def menu():
     print("-------------------------------------")
-    print("| start | config | set | sim | stop |")
+    print("| start | con | set | sim | test | stop |")
     print("------------------------------------\n")
 
     inp = raw_input()
@@ -25,6 +25,8 @@ def menu():
         ball_config()
     elif inp == "sim":
         angle_calc()
+    elif inp == "test":
+        test_menu()
     elif inp == "stop":
         stop()
     else:
