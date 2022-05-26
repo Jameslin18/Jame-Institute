@@ -37,8 +37,7 @@ def menu():
 def ball_config():
     print("You are now able to configure the type of ball to practice with.\n")
 
-    right, left, mid = comp_calc_pulse()
-    throttles = right, left, mid
+    throttles = comp_calc_pulse()
 
     set_horiz_servo()
     set_vert_servo()
