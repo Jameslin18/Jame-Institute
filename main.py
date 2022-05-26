@@ -6,6 +6,8 @@ from motor_op import set_start, set_all_wheels, set_cont_servo, set_horiz_servo,
 from comp_calc import comp_calc_pulse
 from calc import angle_calc
 
+pi = pigpio.pi()
+
 time.sleep(1)
 os.system("sudo pigpiod")
 time.sleep(1)
