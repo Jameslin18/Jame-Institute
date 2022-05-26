@@ -1,5 +1,6 @@
 from motor_test import motor, servo
-from motor_test import set_motor_pulse, set_servo_duty,
+from motor_test import set_motor_pulse, set_servo_duty
+
 
 def set_start():
     pi.set_servo_pulsewidth(motor.p1, motor.min)
