@@ -1,5 +1,4 @@
 import math
-import time
 from sympy import Eq, symbols, solve, Symbol
 
 
@@ -32,6 +31,43 @@ def raw_input():
     return inp
 
 
+def inp_filter(parameters, inp_type):
+    if inp_type == "str":
+        while True:
+            try:
+                value = str(raw_input())
+                if value == parameters:
+                    return value
+                elif value in parameters:
+                    return value
+                else:
+                    print("Invalid input.")
+            except ValueError:
+                print("Invalid type input.")
+
+    elif inp_type == "int":
+        while True:
+            try:
+                value = int(raw_input())
+                if value in parameters:
+                    return value
+                else:
+                    print("Not within range.")
+            except ValueError:
+                print("Invalid type input.")
+
+    elif inp_type == "float":
+        while True:
+            try:
+                value = float(raw_input())
+                if value == parameters:
+                    return value
+                else:
+                    print("Not within range.")
+            except ValueError:
+                print("Invalid type input.")
+
+
 def angle_inp():
     print("Give angle of rotation, or enter 'no spin'.")
     try:
@@ -57,25 +93,12 @@ def ang_pulse(inp):
 
 def power_set():
     print("Give power value from 0 - 100.")
-    while True:
-        try:
-            power = int(raw_input())
-            if power > 100:
-                power = 100
-                print("Max value is 100.")
-                break
-            elif power < 0:
-                power = 0
-                print("Min value is 0.")
-                break
-            else:
-                break
-        except ValueError:
-            print("cringe.")
+    parameters = range(0, 101)
+    power = inp_filter(parameters, "int")
 
     pulse = float(1100 + 900 * float(power/100))
-    print(pulse)
-    print("Power set to ", power, ".")
+    print("Base pulse is set to ", pulse, ".")
+    print("Power set to ", power, ".\n")
     return pulse
 
 

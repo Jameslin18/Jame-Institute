@@ -1,7 +1,6 @@
 import pigpio  # importing GPIO library
 import os  # importing os library to communicate with the system
 import time
-from calc import calc_pulse
 
 
 os.system("sudo pigpiod")  # Launching GPIO library
@@ -63,7 +62,7 @@ print("For first time launch, select [set].\n"
       "For shutdown of all motors, select [stop].\n")
 
 
-def menu():
+def test_menu():
     print("--------------------------------------------------")
     print("| set | start | man | ball | cs | hs | vs | stop |")
     print("--------------------------------------------------")
@@ -90,8 +89,8 @@ def menu():
     elif inp == "psychosis":
         deep_state()
     else:
-        print("cringe.")
-        menu()
+        print("Invalid input.")
+        test_menu()
 
 
 def raw_input():
@@ -103,7 +102,7 @@ def esc_startup():
     pi.set_servo_pulsewidth(motor.p1, motor.min)
     pi.set_servo_pulsewidth(motor.p2, motor.min)
     pi.set_servo_pulsewidth(motor.p3, motor.min)
-    menu()
+    test_menu()
 
 
 def set_motor_pulse(wheel, throttle):
@@ -116,16 +115,6 @@ def set_servo_duty(serv, duty):
     pi.set_PWM_frequency(serv, servo.f)
     pi.set_PWM_range(serv, servo.r)
     pi.set_PWM_dutycycle(serv, duty)
-
-
-def ball_config():
-    right, left, mid = calc_pulse()
-
-    set_motor_pulse(motor.p1, right)
-    set_motor_pulse(motor.p2, left)
-    set_motor_pulse(motor.p3, mid)
-
-    menu()
 
 
 def choose_wheel(func):
@@ -147,10 +136,10 @@ def choose_wheel(func):
             print("The middle wheel is selected.")
             return wheel
         elif inp == "menu":
-            menu()
+            test_menu()
             break
         else:
-            print("cringe.")
+            print("Invalid input.")
 
 
 def esc_settings():
@@ -176,17 +165,17 @@ def esc_settings():
                 print("There should be two beeps as confirmation.")
                 print("After this the ESC is set and you can disconnect battery.")
             else:
-                print("bruh.")
+                print("Invalid input.")
                 pi.set_servo_pulsewidth(pin, 0)
-                menu()
+                test_menu()
         else:
-            print("bruh.")
+            print("Invalid input.")
             pi.set_servo_pulsewidth(pin, 0)
-            menu()
+            test_menu()
     else:
-        print("bruh.")
+        print("Invalid input.")
         pi.set_servo_pulsewidth(pin, 0)
-        menu()
+        test_menu()
 
 
 def manual_drive():  # You will use this function to program your ESC if required
@@ -214,10 +203,10 @@ def manual_drive():  # You will use this function to program your ESC if require
                     set_motor_pulse(pin, throttle)
         except ValueError:
             if str_inp == "menu":
-                menu()
+                test_menu()
                 break
             else:
-                print("cringe.")
+                print("Invalid input.")
 
 
 def manual_drive_mult():
@@ -271,7 +260,7 @@ def manual_drive_mult():
                         break
 
                     except ValueError:
-                        menu()
+                        test_menu()
 
         throttle = WheelThrottles()
 
@@ -293,7 +282,7 @@ def choose_single_mult():
             manual_drive_mult()
             break
         else:
-            print("cringe.")
+            print("Invalid input.")
 
 
 def cont_servo():
@@ -314,11 +303,11 @@ def cont_servo():
             set_servo_duty(servo.p1, servo.cmid)
 
         elif servo_inp == "menu":
-            menu()
+            test_menu()
             break
 
         else:
-            print("cringe.")
+            print("Invalid input.")
 
 
 def angle_servo(amin, amax):
@@ -331,6 +320,7 @@ def angle_servo(amin, amax):
             print("Maximum is ", amax, ".\n")
         else:
             duty = float(ang + 135) * float(100 / 270) + 25
+            print("Angle set at ", ang, "degrees.")
             break
 
     return duty
@@ -347,7 +337,7 @@ def horiz_servo():
             set_servo_duty(servo.p2, servo_inp)
 
         except ValueError:
-            menu()
+            test_menu()
 
 
 def vert_servo():
@@ -361,7 +351,7 @@ def vert_servo():
             set_servo_duty(servo.p3, servo_inp)
 
         except ValueError:
-            menu()
+            test_menu()
 
 
 def stop():  # This will stop every action your Pi is performing for ESC of course.
@@ -422,7 +412,7 @@ def troll():
           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
           )
     print("\nTrolled.")
-    menu()
+    test_menu()
 
 
 def deep_state():
@@ -431,4 +421,4 @@ def deep_state():
         time.sleep(1)
 
 
-menu()
+test_menu()
