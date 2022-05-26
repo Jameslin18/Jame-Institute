@@ -11,9 +11,9 @@ time.sleep(1)
 
 
 def menu():
-    print("------------------------------------------")
-    print("| start | config | set | test | sim | stop |")
-    print("-----------------------------------------\n")
+    print("-------------------------------------")
+    print("| start | config | set | sim | stop |")
+    print("------------------------------------\n")
 
     inp = raw_input()
 

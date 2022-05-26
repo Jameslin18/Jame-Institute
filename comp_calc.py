@@ -297,6 +297,3 @@ def comp_calc_pulse():
         print_deg(x_net, y_net)
 
         return out
-
-
-comp_calc_pulse()

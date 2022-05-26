@@ -3,10 +3,6 @@ import os  # importing os library to communicate with the system
 import time
 
 
-os.system("sudo pigpiod")  # Launching GPIO library
-time.sleep(1)  # As i said it is too impatient and so if this delay is removed you will get an error
-
-
 class MotorInfo:
     p1 = 17  # right
     p2 = 27  # left
@@ -52,17 +48,16 @@ pi.set_servo_pulsewidth(motor.p1, 0)
 pi.set_servo_pulsewidth(motor.p2, 0)
 pi.set_servo_pulsewidth(motor.p3, 0)
 
-print("For first time launch, select [set].\n"
-      "For motor initialization, select [start].\n"
-      "For manual pulse inputs, select [man].\n"
-      "For specific shot configuration, select [ball].\n"
-      "For continuous servo control, select [cs].\n"
-      "For horizontal deflector control, select [hs].\n"
-      "For vertical deflector control, select [vs].\n"
-      "For shutdown of all motors, select [stop].\n")
-
 
 def test_menu():
+    print("For first time launch, select [set].\n"
+          "For motor initialization, select [start].\n"
+          "For manual pulse inputs, select [man].\n"
+          "For specific shot configuration, select [ball].\n"
+          "For continuous servo control, select [cs].\n"
+          "For horizontal deflector control, select [hs].\n"
+          "For vertical deflector control, select [vs].\n"
+          "For shutdown of all motors, select [stop].\n")
     print("--------------------------------------------------")
     print("| set | start | man | ball | cs | hs | vs | stop |")
     print("--------------------------------------------------")
